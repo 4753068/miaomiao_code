@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@android:color/white"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="8dp"
+    app:cardMaxElevation="12dp"
+    app:cardPreventCornerOverlap="false"
+    app:cardUseCompatPadding="true"
+    app:strokeColor="#CCCCCC"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- includeFontPadding="false" 是防止文字下半截被切掉的终极解法 -->
+        <TextView
+            android:id="@+id/top_scan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|start"
+            android:includeFontPadding="false"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="14dp"
+            android:text="扫一扫"
+            android:textColor="#333333"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="12dp"
+            android:background="#F0F0F0" />
+
+        <TextView
+            android:id="@+id/top_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|start"
+            android:includeFontPadding="false"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="14dp"
+            android:text="加好友/群"
+            android:textColor="#333333"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="12dp"
+            android:background="#F0F0F0" />
+
+        <TextView
+            android:id="@+id/top_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|start"
+            android:includeFontPadding="false"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="14dp"
+            android:text="创建群"
+            android:textColor="#333333"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="12dp"
+            android:background="#F0F0F0" />
+
+        <TextView
+            android:id="@+id/top_qrcode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|start"
+            android:includeFontPadding="false"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="14dp"
+            android:text="我的二维码"
+            android:textColor="#333333"
+            android:textSize="16sp" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网络连接失败 - 404</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 480px;
+            width: 100%;
+            padding: 40px 24px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* 插画样式与浮动动画 */
+        .illustration {
+            width: 100%;
+            max-width: 240px;
+            height: auto;
+            margin: 0 auto 32px;
+        }
+
+        .cloud {
+            animation: float 4s ease-in-out infinite;
+        }
+        .cloud-delayed {
+            animation: float 4s ease-in-out infinite;
+            animation-delay: 2s;
+        }
+        .signal-line {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* 文本样式 */
+        h1 {
+            font-size: 64px;
+            font-weight: 800;
+            color: #2c3e50;
+            line-height: 1;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+            background: linear-gradient(45deg, #2c3e50, #4a69bd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 16px;
+        }
+
+        p {
+            font-size: 14px;
+            color: #718096;
+            line-height: 1.6;
+            margin-bottom: 36px;
+        }
+
+        /* 按钮组件 */
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 28px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            cursor: pointer;
+            border: none;
+            outline: none;
+        }
+
+        .btn-primary {
+            background-color: #3867d6;
+            color: #fff;
+            box-shadow: 0 8px 16px rgba(56, 103, 214, 0.25);
+        }
+
+        .btn-primary:hover {
+            background-color: #2b52b3;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 20px rgba(56, 103, 214, 0.35);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background-color: #fff;
+            color: #4b5563;
+            border: 1px solid #e5e7eb;
+        }
+
+        .btn-secondary:hover {
+            background-color: #f9fafb;
+            color: #1f2937;
+            border-color: #d1d5db;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary:active {
+            transform: translateY(0);
+        }
+
+        /* 动画定义 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 480px) {
+            .container {
+                padding: 32px 16px;
+                background: #fff; /* 弱化移动端模糊开销 */
+            }
+            h1 { font-size: 52px; }
+            h2 { font-size: 18px; }
+            .btn-group {
+                flex-direction: column;
+            }
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <svg class="illustration" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path class="cloud" d="M140 110C140 98.9543 131.046 90 120 90C118.044 90 116.161 90.2811 114.382 90.8027C110.153 84.2863 102.822 80 94.5 80C82.1797 80 72.0722 89.349 70.6622 101.353C69.4674 100.485 68.0163 100 66.45 100C61.4794 100 57.45 104.03 57.45 109C57.45 109.431 57.4804 109.855 57.5393 110H140Z" fill="#D1D8E0"/>
+        <circle cx="100" cy="145" r="6" fill="#A5B1C2"/>
+        <path d="M100 145L100 115" stroke="#A5B1C2" stroke-width="3" stroke-linecap="round"/>
+        <path class="signal-line" d="M88 125C95 119 105 119 112 125" stroke="#FC5C65" stroke-width="3" stroke-linecap="round"/>
+        <path class="signal-line" style="animation-delay: 0.5s;" d="M80 115C91 106 109 106 120 115" stroke="#FC5C65" stroke-width="3" stroke-linecap="round"/>
+        <path d="M100 65L94 76H106L100 65Z" fill="#FFA801"/>
+        <path class="cloud-delayed" d="M65 75C65 66.7157 58.2843 60 50 60C48.533 60 47.1208 60.2108 45.7865 60.602C42.6146 55.7147 37.1165 52.5 30.875 52.5C21.6348 52.5 14.0541 59.5118 12.9967 68.5148C12.1005 67.8638 11.0123 67.5 9.8375 67.5C6.10958 67.5 3.0875 70.5221 3.0875 74.25C3.0875 74.5732 3.1103 74.8913 3.15444 75H65Z" fill="#E2E8F0"/>
+        <path d="M145 65L155 75M155 65L145 75" stroke="#FC5C65" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
+
+    <h1>404</h1>
+    <h2>网络连接失败</h2>
+    <p>抱歉，目标页面正与地球失去联系。<br>请检查您的网线、Wi-Fi 或路由器是否工作正常。</p>
+
+    <div class="btn-group">
+        <button class="btn btn-primary" onclick="handleRetry()">重新连接</button>
+        <a href="/" class="btn btn-secondary">返回首页</a>
+    </div>
+</div>
+
+<script>
+    // 模拟点击“重新连接”时的精致动效与反馈
+    function handleRetry() {
+        const btn = document.querySelector('.btn-primary');
+        const originalText = btn.innerHTML;
+
+        // 变成加载状态
+        btn.style.pointerEvents = 'none';
+        btn.style.opacity = '0.8';
+        btn.innerHTML = '正在尝试连接...';
+
+        // 模拟 1.5 秒后检测网络
+        setTimeout(() => {
+            if (navigator.onLine) {
+                // 如果网络通了，刷新页面
+                window.location.reload();
+            } else {
+                // 如果依旧没网，优雅提示并恢复
+                alert('仍然无法连接到网络，请检查设置后再试。');
+                btn.style.pointerEvents = 'auto';
+                btn.style.opacity = '1';
+                btn.innerHTML = originalText;
+            }
+        }, 1500);
+    }
+</script>
+</body>
+</html>

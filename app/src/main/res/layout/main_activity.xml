@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/rootContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
+            <Utils.FBWebView
+                android:id="@+id/myWebView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        <!-- 2. 进度条放在 FrameLayout 最上层，保持能浮动在顶部显示 -->
+        <ProgressBar
+            android:id="@+id/webViewProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:max="100"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
+</RelativeLayout>

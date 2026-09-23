@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_input_box"
+    android:overScrollMode="never"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="消息提醒设置"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_capsule_button_gay"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="新信息播放提示音"
+                    android:textColor="#000000"
+                    android:textSize="15sp" />
+                <Switch
+                    android:id="@+id/switchSound"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="#E3E4E6" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="新信息震动"
+                    android:textColor="#000000"
+                    android:textSize="15sp" />
+                <Switch
+                    android:id="@+id/switchVibrate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="#E3E4E6" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="使用短震动"
+                    android:textColor="#000000"
+                    android:textSize="15sp" />
+                <Switch
+                    android:id="@+id/switchShortVibrate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="#E3E4E6" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="当前好友页面来信息短震"
+                    android:textColor="#000000"
+                    android:textSize="15sp" />
+                <Switch
+                    android:id="@+id/switchFriendShortVibrate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="关闭状态栏通知"
+                    android:textColor="#000000"
+                    android:textSize="15sp" />
+                <Switch
+                    android:id="@+id/switchCloseNotice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="选择提示音"
+            android:textColor="#5E6573"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:columnCount="3"
+            android:rowCount="2">
+
+            <CheckBox android:id="@+id/cbSound1" android:layout_width="0dp" android:layout_height="40dp" android:layout_columnWeight="1" android:text="默认" android:textColor="#000000" android:textSize="14sp"/>
+            <CheckBox android:id="@+id/cbSound2" android:layout_width="0dp" android:layout_height="40dp" android:layout_columnWeight="1" android:text="叮咚" android:textColor="#000000" android:textSize="14sp"/>
+            <CheckBox android:id="@+id/cbSound3" android:layout_width="0dp" android:layout_height="40dp" android:layout_columnWeight="1" android:text="萌宠" android:textColor="#000000" android:textSize="14sp"/>
+            <CheckBox android:id="@+id/cbSound4" android:layout_width="0dp" android:layout_height="40dp" android:layout_columnWeight="1" android:text="干练" android:textColor="#000000" android:textSize="14sp"/>
+            <CheckBox android:id="@+id/cbSound5" android:layout_width="0dp" android:layout_height="40dp" android:layout_columnWeight="1" android:text="循进" android:textColor="#000000" android:textSize="14sp"/>
+            <CheckBox android:id="@+id/cbSound6" android:layout_width="0dp" android:layout_height="40dp" android:layout_columnWeight="1" android:text="清脆" android:textColor="#000000" android:textSize="14sp"/>
+        </GridLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="24dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/bg_capsule_button_black"
+                android:text="取消"
+                android:textColor="#ffffff"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                style="?android:attr/borderlessButtonStyle"/>
+
+            <Button
+                android:id="@+id/btnConfirm"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/bg_capsule_button"
+                android:text="确定"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                style="?android:attr/borderlessButtonStyle"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints">
+    <ImageView
+        android:id="@+id/btnHome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/btnhome"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:clickable="true"></ImageView>
+
+        <TextView
+            android:id="@+id/message_number"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:minWidth="24dp"
+            android:textColor="@color/white"
+            android:layout_gravity="top|right"
+            android:gravity="center"
+            android:background="@drawable/newnum"
+            android:layout_margin="5dp"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:padding="2dp"
+            android:text="99+"></TextView>
+    </FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

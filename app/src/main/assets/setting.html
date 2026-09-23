@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>设置</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-main: #111111;
+            --text-sub: #999999;
+            --text-warn: #e54d42;
+            --border-color: #f8f8f8;
+
+            /* 分组图标色彩系统 */
+            --color-green: #4caf50;
+            --color-teal: #009688;
+            --color-blue: #3f51b5; /* 全局开关与复选框现在高亮绑定此蓝色 */
+            --color-orange: #ff5722;
+            --color-purple: #7e57c2;
+            --color-red: #f44336;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* 锁定背景滚动所需样式 */
+        body.modal-open {
+            overflow: hidden !important;
+            height: 100vh !important;
+        }
+
+        /* 极简容器 */
+        .settings-container {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 24px 20px 60px 20px;
+            box-sizing: border-box;
+        }
+
+        /* 居中标题 */
+        .page-header {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            padding: 10px 0 30px 0;
+            color: var(--text-main);
+        }
+
+        /* 分组小标题 */
+        .group-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-sub);
+            margin: 24px 0 16px 4px;
+        }
+
+        /* 列表容器 */
+        .settings-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 列表行 */
+        .settings-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            -webkit-tap-highlight-color: transparent;
+            text-decoration: none; /* 确保a标签包裹时没有下划线 */
+            color: inherit;
+        }
+
+        .settings-item:active {
+            background-color: #fcfcfc;
+        }
+
+        /* 左侧圆形图标基类 */
+        .item-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+            flex-shrink: 0;
+            color: #ffffff;
+        }
+
+        /* 图标独立色彩 */
+        .bg-green  { background-color: var(--color-green); }
+        .bg-teal   { background-color: var(--color-teal); }
+        .bg-blue   { background-color: var(--color-blue); }
+        .bg-orange { background-color: var(--color-orange); }
+        .bg-purple { background-color: var(--color-purple); }
+        .bg-red    { background-color: var(--color-red); }
+
+        .item-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* 中间文字信息 */
+        .item-info {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .item-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-main);
+            line-height: 1.3;
+        }
+
+        .item-desc {
+            font-size: 13px;
+            color: var(--text-sub);
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+
+        /* 右侧轻量级箭头 */
+        .item-arrow {
+            display: flex;
+            align-items: center;
+            color: #111111;
+            margin-left: 8px;
+            opacity: 0.8;
+        }
+
+        .item-arrow svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* 特殊区域 */
+        .special-block {
+            padding: 4px 4px 16px 4px;
+        }
+
+        /* 优化后的应用图标网格系统 */
+        .app-icon-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+            background-color: #f9f9fa;
+            border-radius: 16px;
+            padding: 16px;
+            box-sizing: border-box;
+        }
+
+        .app-icon-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+            padding: 10px 4px;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+            background: #ffffff;
+            border: 1.5px solid transparent;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        .app-icon-card:active {
+            transform: scale(0.95);
+        }
+
+        .app-icon-card.selected {
+            border-color: var(--color-blue);
+            background-color: #f4f6fa;
+        }
+
+        /* 占位图/应用图标底框 */
+        .app-icon-img-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background-color: #f0f0f2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 6px;
+            font-size: 20px;
+            box-shadow: inset 0 0 1px rgba(0,0,0,0.1);
+        }
+
+        .app-icon-name {
+            font-size: 11px;
+            font-weight: 500;
+            color: #555555;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .app-icon-card.selected .app-icon-name {
+            color: var(--color-blue);
+            font-weight: 600;
+        }
+
+        /* 选中微型勾选徽章 */
+        .app-badge-check {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 14px;
+            height: 14px;
+            background-color: var(--color-blue);
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.2s ease;
+        }
+
+        .app-icon-card.selected .app-badge-check {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .app-badge-check svg {
+            width: 9px;
+            height: 9px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 3;
+        }
+
+        .warn-text {
+            color: var(--text-warn);
+            font-size: 12px;
+            line-height: 1.5;
+            margin-top: 12px;
+            padding: 0 4px;
+        }
+
+        /* 防止 Vue 渲染前闪烁 */
+        [v-cloak] { display: none !important; }
+
+        /* ==================== 手机端手势弹窗及自定义样式 ==================== */
+        .modal-mask {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-mask.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-container {
+            width: 100%;
+            max-width: 480px;
+            background-color: #ffffff;
+            border-top-left-radius: 24px;
+            border-top-right-radius: 24px;
+            padding: 24px 24px 40px 24px;
+            box-sizing: border-box;
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.1, 0.8, 0.3, 1);
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-mask.show .modal-container {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            flex-shrink: 0;
+        }
+        .modal-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+            text-align: center;
+            color: var(--text-main);
+        }
+
+        .modal-subtitle {
+            font-size: 12px;
+            color: var(--text-sub);
+            text-align: center;
+            margin: 6px 0 16px 0;
+        }
+
+        /* 可滚动区域容器 */
+        .modal-scroll-area {
+            overflow-y: auto;
+            flex: 1;
+            padding-right: 4px;
+            margin-bottom: 16px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* 统一的配置行布局 */
+        .switch-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 4px;
+            border-bottom: 1px solid #f8f8f8;
+        }
+
+        .switch-label {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        /* iOS 风格的极简高质感开关 */
+        .pure-switch {
+            position: relative;
+            display: inline-block;
+            width: 46px;
+            height: 26px;
+        }
+        .pure-switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #e4e4e4;
+            transition: .3s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px; width: 20px;
+            left: 3px; bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        input:checked + .slider { background-color: var(--color-blue); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        /* ==================== 通用手机 Checkbox 列表及高亮样式 ==================== */
+        .checkbox-list {
+            display: flex;
+            flex-direction: column;
+            background-color: #f9f9fa;
+            border-radius: 14px;
+            padding: 4px 12px;
+        }
+        .checkbox-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 4px;
+            border-bottom: 1px solid #f1f1f2;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .checkbox-item:last-child {
+            border-bottom: none;
+        }
+        .checkbox-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333333;
+        }
+        .checkbox-item.selected .checkbox-name {
+            color: var(--color-blue);
+            font-weight: 600;
+        }
+        .check-box-icon {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #dcdcdc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            position: relative;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .checkbox-item.selected .check-box-icon {
+            border-color: var(--color-blue);
+            background-color: var(--color-blue);
+        }
+        .checkbox-item.selected .check-box-icon::after {
+            content: "";
+            position: absolute;
+            width: 4px;
+            height: 8px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        /* 时间滚轮样式组 */
+        .picker-wrapper {
+            position: relative;
+            background-color: #f9f9fa;
+            border-radius: 16px;
+            padding: 10px 0;
+            margin-bottom: 24px;
+            overflow: hidden;
+            height: 140px;
+            flex-shrink: 0;
+        }
+        .picker-disabled {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        .picker-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+        .picker-column {
+            position: relative;
+            width: 45%;
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .picker-list {
+            position: absolute;
+            top: 50%;
+            margin-top: -20px;
+            left: 0;
+            width: 100%;
+            padding: 0;
+            list-style: none;
+            transition: transform 0.15s ease-out;
+            text-align: center;
+        }
+        .picker-item {
+            height: 40px;
+            line-height: 40px;
+            font-size: 18px;
+            font-weight: 500;
+            color: #999999;
+            white-space: nowrap;
+            transition: color 0.15s, font-size 0.15s;
+        }
+        .picker-item.selected {
+            color: var(--text-main);
+            font-size: 21px;
+            font-weight: 700;
+        }
+        .picker-indicator {
+            position: absolute;
+            top: 50%;
+            left: 5%;
+            width: 90%;
+            height: 40px;
+            margin-top: -20px;
+            border-top: 1px solid rgba(0,0,0,0.06);
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            background-color: rgba(0, 0, 0, 0.01);
+            pointer-events: none;
+            border-radius: 6px;
+        }
+
+        /* 底部操作按钮 */
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+            flex-shrink: 0;
+        }
+        .modal-actions button {
+            flex: 1;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .btn-cancel {
+            background-color: #f4f4f5;
+            color: #666666;
+        }
+        .btn-cancel:active { background-color: #eaeaea; }
+        .btn-confirm {
+            background-color: #111111;
+            color: #ffffff;
+        }
+        .btn-confirm:active { background-color: #333333; }
+
+        .ringtone-section {
+            margin-top: 12px;
+        }
+        .section-title {
+            font-size: 13px;
+            color: var(--text-sub);
+            margin-bottom: 8px;
+            padding-left: 4px;
+        }
+        .ringtone-disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    </style>
+    <script src="js/vue.js"></script>
+</head>
+<body>
+
+<div id="app" v-cloak>
+    <div class="settings-container">
+
+        <div class="page-header">设置</div>
+
+        <div class="group-title">账户信息</div>
+        <div class="settings-group">
+            <a href="file:///android_asset/memberinfo.html" class="settings-item">
+                <div class="item-icon bg-green">
+                    <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s1.79-4 4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                </div>
+                <div class="item-info">
+                    <div class="item-title">{{ nickname }}</div>
+                    <!-- 账号ID后面追加 VIP 过期时间 -->
+                    <div class="item-desc">账号 ID: {{ userid }} {{ formattedVipTime }}</div>
+                </div>
+                <div class="item-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
+                </div>
+            </a>
+
+            <!-- 1. 公众号绑定 VIP 拦截 -->
+            <a href="javascript:void(0);" @click="handleVipLink('file:///android_asset/bangding.html')" class="settings-item">
+                <div class="item-icon bg-teal">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                </div>
+                <div class="item-info">
+                    <div class="item-title">公众号绑定<img src="img/vip.png" style="margin-left:10px;width:16px;" align="absmiddle"></div>
+                    <div class="item-desc">订阅会员、可支持远程删除聊天记录</div>
+                </div>
+                <div class="item-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
+                </div>
+            </a>
+
+            <div class="settings-item" @click="clickToServer">
+                <div class="item-icon bg-blue">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.53c-.26-.81-1-1.4-1.9-1.4h-1v-3c0-.55-.45-1-1-1h-6v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                </div>
+                <div class="item-info">
+                    <div class="item-title">选择节点</div>
+                    <div class="item-desc">连接不同地区的节点，认识更多新朋友</div>
+                </div>
+                <div class="item-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="group-title">安全与隐私</div>
+        <div class="settings-group">
+            <!-- 2. 聊天记录自动焚毁 VIP 拦截 -->
+            <div class="settings-item" @click="checkVip() ? openBurnModal() : showVipAlert()">
+                <div class="item-icon bg-orange">
+                    <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>
+                </div>
+                <div class="item-info">
+                    <div class="item-title">聊天记录自动焚毁<img src="img/vip.png" style="margin-left:10px;width:16px;" align="absmiddle"></div>
+                    <div class="item-desc">当前设置：{{ currentBurnText }}</div>
+                </div>
+                <div class="item-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
+                </div>
+            </div>
+
+            <div class="settings-item" @click="openStrategyModal">
+                <div class="item-icon bg-orange">
+                    <svg viewBox="0 0 24 24"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm1-15h-2v6h6v-2h-4V7z"/></svg>
+                </div>
+                <div class="item-info">
+                    <div class="item-title">即时焚毁策略</div>
+                    <div class="item-desc">包含：{{ currentStrategyText }}</div>
+                </div>
+                <div class="item-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
+                </div>
+            </div>
+
+            <a href="file:///android_asset/password.html?type=1" class="settings-item">
+                <div class="item-icon bg-orange">
+                    <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-18-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                </div>
+                <div class="item-info">
+                    <div class="item-title">安全验证</div>
+                    <div class="item-desc">配置安全登录密码与独立加密传输锁</div>
+                </div>
+                <div class="item-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
+                </div>
+            </a>
+
+            <!-- 3. 虚拟验证 VIP 拦截 -->
+            <a href="javascript:void(0);" @click="handleVipLink('password.html?type=2')" class="settings-item">
+                <div class="item-icon bg-orange">
+                    <svg viewBox="0 0 24 24"><path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM8.9 6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2H8.9V6zM16 18H8v-2h8v2z"/></svg>
+                </div>
+                <div class="item-info">
+                    <div class="item-title">虚拟验证<img src="img/vip.png" style="margin-left:10px;width:16px;" align="absmiddle"></div>
+                    <div class="item-desc">配置虚拟密码以在特殊状态下隐藏核心数据。</div>
+                </div>
+                <div class="item-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
+                </div>
+            </a>
+        </div>
+
+        <div class="group-title">交互与消息提醒</div>
+        <div class="settings-group">
+            <div class="settings-item" @click="openRemindModal">
+                <div class="item-icon bg-purple">
+                    <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+                </div>
+                <div class="item-info">
+                    <div class="item-title">消息提醒设置</div>
+                    <div class="item-desc">当前设置：{{ currentRemindText }}</div>
+                </div>
+                <div class="item-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
+                </div>
+            </div>
+
+            <div class="settings-item" @click="openLockMechanismModal">
+                <div class="item-icon bg-purple">
+                    <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+                </div>
+                <div class="item-info">
+                    <div class="item-title">聊天与锁定机制</div>
+                    <div class="item-desc">当前设置：{{ currentLockMechanismText }}</div>
+                </div>
+                <div class="item-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
+                </div>
+            </div>
+
+            <!-- 4. 安全验证模式 VIP 拦截 -->
+            <div class="settings-item" @click="checkVip() ? openAuthModal() : showVipAlert()">
+                <div class="item-icon bg-purple">
+                    <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                </div>
+                <div class="item-info">
+                    <div class="item-title">安全验证模式<img src="img/vip.png" style="margin-left:10px;width:16px;" align="absmiddle"></div>
+                    <div class="item-desc">当前选择：{{ currentAuthText }}</div>
+                </div>
+                <div class="item-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
+                </div>
+            </div>
+
+            <div class="settings-item" @click="openClickMModal">
+                <div class="item-icon bg-purple">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                </div>
+                <div class="item-info">
+                    <div class="item-title">单击M键模式</div>
+                    <div class="item-desc">当前动作：{{ currentClickMText }}</div>
+                </div>
+                <div class="item-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
+                </div>
+            </div>
+
+            <div class="settings-item" @click="openPressMModal">
+                <div class="item-icon bg-purple">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+                </div>
+                <div class="item-info">
+                    <div class="item-title">长按M键模式</div>
+                    <div class="item-desc">当前配置：{{ currentPressMText }}</div>
+                </div>
+                <div class="item-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
+                </div>
+            </div>
+
+            <!-- 5. 锁屏后操作 VIP 拦截 -->
+            <div class="settings-item" @click="checkVip() ? openLockActionModal() : showVipAlert()">
+                <div class="item-icon bg-purple">
+                    <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg>
+                </div>
+                <div class="item-info">
+                    <div class="item-title">锁屏后操作<img src="img/vip.png" style="margin-left:10px;width:16px;" align="absmiddle"></div>
+                    <div class="item-desc">当前动作：{{ currentLockActionText }}</div>
+                </div>
+                <div class="item-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="group-title">个性化</div>
+        <div class="settings-group">
+            <div class="settings-item">
+                <div class="item-icon bg-blue">
+                    <svg viewBox="0 0 24 24"><path d="M12 22C6.49 22 2 17.51 2 12S6.49 2 12 2s10 4.04 10 9c0 3.31-2.69 6-6 6h-1.77c-.28 0-.5.22-.5.5 0 .12.05.23.13.33.41.47.64 1.06.64 1.67 0 1.38-1.12 2.5-2.5 2.5zm0-18c-4.41 0-8 3.59-8 8s3.59 8 8 8c.28 0 .5-.22.5-.5 0-.16-.08-.28-.14-.35-.41-.46-.63-1.05-.63-1.65 0-1.38 1.12-2.5 2.5-2.5H16c2.21 0 4-1.79 4-4 0-3.86-3.59-7-8-7z"/><circle cx="6.5" cy="11.5" r="1.5"/><circle cx="9.5" cy="7.5" r="1.5"/><circle cx="14.5" cy="7.5" r="1.5"/><circle cx="17.5" cy="11.5" r="1.5"/></svg>
+                </div>
+                <div class="item-info">
+                    <!-- 6. 自定义应用图标 VIP 标识 -->
+                    <div class="item-title">自定义应用图标<img src="img/vip.png" style="margin-left:10px;width:16px;" align="absmiddle"></div>
+                    <div class="item-desc">可选择替换桌面的应用图标与外观名称</div>
+                </div>
+            </div>
+            <div class="special-block">
+                <div class="app-icon-grid">
+                    <!-- 自定义应用图标点击事件 VIP 拦截 -->
+                    <div
+                            v-for="(app, index) in appIcons"
+                            :key="app.id"
+                            class="app-icon-card"
+                            :class="{ selected: selectedAppIcon === index }"
+                            @click="checkVip() ? selectAppIcon(index) : showVipAlert()"
+                    >
+                        <div class="app-icon-img-box" :style="{ backgroundColor: app.bgColor, color: '#ffffff' }">
+                            {{ app.char }}
+                        </div>
+                        <span class="app-icon-name">{{ app.name }}</span>
+                        <div class="app-badge-check">
+                            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="warn-text">
+                    ⚠️ 注意：更换图标后，所有图标将模拟国外应用，打开后将会显示无法联网的页面，属于正常现象。
+                </div>
+            </div>
+        </div>
+
+        <div class="group-title">其他</div>
+        <div class="settings-group">
+            <div class="settings-item" @click="clickToUpdate">
+                <div class="item-icon bg-red">
+                    <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+                </div>
+                <div class="item-info">
+                    <div class="item-title">喵喵更新</div>
+                    <div class="item-desc">当前版本 {{ versionName }}</div>
+                </div>
+                <div class="item-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
+                </div>
+            </div>
+
+            <div class="settings-item" @click="clickCleanCache">
+                <div class="item-icon bg-red">
+                    <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                </div>
+                <div class="item-info">
+                    <div class="item-title">清除临时缓存文件</div>
+                    <div class="item-desc">清理后将删除收到视频、语音和图片</div>
+                </div>
+                <div class="item-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
+                </div>
+            </div>
+
+            <div class="settings-item" @click="openExitModal">
+                <div class="item-icon bg-red" style="background-color: #333333;">
+                    <svg viewBox="0 0 24 24"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+                </div>
+                <div class="item-info">
+                    <div class="item-title">退出模式</div>
+                    <div class="item-desc">退出后您将暂时无法接收到新消息。</div>
+                </div>
+                <div class="item-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 独立封装自定义 VIP 提醒对话框组件 -->
+    <div class="modal-mask" :class="{ show: isVipModalVisible }" @click="isVipModalVisible = false">
+        <div class="modal-container" @click.stop>
+            <div class="modal-header">
+                <h3>权限不足</h3>
+                <p class="modal-subtitle" style="font-size: 15px; color: var(--text-main); margin: 20px 0; text-align: left; line-height: 1.6;">
+                    抱歉，该功能需要 VIP 权限才能使用。请前往<strong>“分贝应用”</strong>微信公众号购买或续费权限。
+                </p>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-confirm" @click="isVipModalVisible = false">我知道了</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-mask" :class="{ show: isBurnModalVisible }" @click="closeBurnModal">
+        <div class="modal-container" @click.stop>
+            <div class="modal-header">
+                <h3>选择自动焚毁时间</h3>
+                <p class="modal-subtitle">开启后滑动选择具体时间，关闭则不开启焚毁</p>
+            </div>
+            <div class="switch-row">
+                <span class="switch-label">启用自动焚毁</span>
+                <label class="pure-switch">
+                    <input type="checkbox" v-model="tempBurnEnabled" />
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="picker-wrapper" :class="{ 'picker-disabled': !tempBurnEnabled }">
+                <div class="picker-group">
+                    <div class="picker-column" @touchstart="onTouchStart($event, 'hour')" @touchmove="onTouchMove($event, 'hour')" @touchend="onTouchEnd($event, 'hour')">
+                        <ul class="picker-list" :style="{ transform: `translateY(${hourOffset}px)` }">
+                            <li v-for="(h, index) in hours" :key="h" class="picker-item" :class="{ selected: index === tempHourIndex }">{{ String(h).padStart(2, '0') }}</li>
+                        </ul>
+                        <span class="picker-unit" style="position: absolute; right: 10px;">小时</span>
+                    </div>
+                    <div class="picker-column" @touchstart="onTouchStart($event, 'minute')" @touchmove="onTouchMove($event, 'minute')" @touchend="onTouchEnd($event, 'minute')">
+                        <ul class="picker-list" :style="{ transform: `translateY(${minuteOffset}px)` }">
+                            <li v-for="(m, index) in minutes" :key="m" class="picker-item" :class="{ selected: index === tempMinuteIndex }">{{ String(m).padStart(2, '0') }}</li>
+                        </ul>
+                        <span class="picker-unit" style="position: absolute; right: 0;">分钟后</span>
+                    </div>
+                </div>
+                <div class="picker-indicator"></div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" @click="closeBurnModal">取消</button>
+                <button class="btn-confirm" @click="confirmBurnModal">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-mask" :class="{ show: isStrategyModalVisible }" @click="closeStrategyModal">
+        <div class="modal-container" @click.stop>
+            <div class="modal-header">
+                <h3>即时焚毁策略</h3>
+                <p class="modal-subtitle">根据需要配置多种即时消息触发的销毁规则</p>
+            </div>
+            <div class="switch-row">
+                <span class="switch-label">好友收到即焚毁</span>
+                <label class="pure-switch"><input type="checkbox" v-model="tempStrategy.friendReceived" /><span class="slider"></span></label>
+            </div>
+            <div class="switch-row">
+                <span class="switch-label">消息阅后即焚毁</span>
+                <label class="pure-switch"><input type="checkbox" v-model="tempStrategy.readAndBurn" /><span class="slider"></span></label>
+            </div>
+            <div class="switch-row">
+                <span class="switch-label">退出聊天自动焚毁</span>
+                <label class="pure-switch"><input type="checkbox" v-model="tempStrategy.exitChatBurn" /><span class="slider"></span></label>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" @click="closeStrategyModal">取消</button>
+                <button class="btn-confirm" @click="confirmStrategyModal">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-mask" :class="{ show: isRemindModalVisible }" @click="closeRemindModal">
+        <div class="modal-container" @click.stop>
+            <div class="modal-header">
+                <h3>消息提醒设置</h3>
+                <p class="modal-subtitle">自定义在收到新消息时的震动行为与专属铃声</p>
+            </div>
+            <div class="modal-scroll-area">
+                <div class="switch-row">
+                    <span class="switch-label">新消息播放声音</span>
+                    <label class="pure-switch"><input type="checkbox" v-model="tempRemind.playSound" /><span class="slider"></span></label>
+                </div>
+                <div class="switch-row">
+                    <span class="switch-label">新消息震动</span>
+                    <label class="pure-switch"><input type="checkbox" v-model="tempRemind.vibrate" /><span class="slider"></span></label>
+                </div>
+                <div class="switch-row">
+                    <span class="switch-label">使用短震动</span>
+                    <label class="pure-switch"><input type="checkbox" v-model="tempRemind.shortVibrate" :disabled="!tempRemind.vibrate" /><span class="slider" :style="!tempRemind.vibrate ? 'opacity: 0.4; pointer-events:none;' : ''"></span></label>
+                </div>
+                <div class="ringtone-section" :class="{ 'ringtone-disabled': !tempRemind.playSound }">
+                    <div class="section-title">选择消息铃声 (每次只能选择一个)</div>
+                    <div class="checkbox-list">
+                        <div v-for="(name, index) in ringtoneNames" :key="index" class="checkbox-item" :class="{ selected: tempRemind.selectedRingtone === (index + 1) }" @click="selectRingtoneItem(index + 1)">
+                            <span class="checkbox-name">{{ name }}</span>
+                            <div class="check-box-icon"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" @click="closeRemindModal">取消</button>
+                <button class="btn-confirm" @click="confirmRemindModal">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-mask" :class="{ show: isLockMechanismModalVisible }" @click="closeLockMechanismModal">
+        <div class="modal-container" @click.stop>
+            <div class="modal-header">
+                <h3>聊天与锁定机制</h3>
+                <p class="modal-subtitle">自定义输入状态下的隐私隐藏行为与各类快捷场景锁定规则</p>
+            </div>
+            <div class="modal-scroll-area">
+                <div class="switch-row">
+                    <span class="switch-label">输入时隐藏聊天内容</span>
+                    <label class="pure-switch"><input type="checkbox" v-model="tempLockMechanism.hideOnInput" /><span class="slider"></span></label>
+                </div>
+                <div class="switch-row">
+                    <span class="switch-label">回车发送消息</span>
+                    <label class="pure-switch"><input type="checkbox" v-model="tempLockMechanism.enterToSend" /><span class="slider"></span></label>
+                </div>
+                <div class="switch-row">
+                    <span class="switch-label">返回桌面自动锁定</span>
+                    <label class="pure-switch"><input type="checkbox" v-model="tempLockMechanism.lockOnDesktop" /><span class="slider"></span></label>
+                </div>
+                <div class="switch-row">
+                    <span class="switch-label">返回首页自动锁定</span>
+                    <label class="pure-switch"><input type="checkbox" v-model="tempLockMechanism.lockOnHome" /><span class="slider"></span></label>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" @click="closeLockMechanismModal">取消</button>
+                <button class="btn-confirm" @click="confirmLockMechanismModal">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-mask" :class="{ show: isAuthModalVisible }" @click="closeAuthModal">
+        <div class="modal-container" @click.stop>
+            <div class="modal-header">
+                <h3>安全验证模式</h3>
+                <p class="modal-subtitle">进入软件或敏感操作前的权限级别验证</p>
+            </div>
+            <div class="modal-scroll-area">
+                <div class="checkbox-list">
+                    <div class="checkbox-item" :class="{ selected: tempAuthMode === '指纹验证' }" @click="tempAuthMode = '指纹验证'"><span class="checkbox-name">指纹验证</span><div class="check-box-icon"></div></div>
+                    <div class="checkbox-item" :class="{ selected: tempAuthMode === '密码验证' }" @click="tempAuthMode = '密码验证'"><span class="checkbox-name">密码验证</span><div class="check-box-icon"></div></div>
+                    <div class="checkbox-item" :class="{ selected: tempAuthMode === '无需验证' }" @click="tempAuthMode = '无需验证'"><span class="checkbox-name">无需验证</span><div class="check-box-icon"></div></div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" @click="closeAuthModal">取消</button>
+                <button class="btn-confirm" @click="confirmAuthModal">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-mask" :class="{ show: isClickMModalVisible }" @click="closeClickMModal">
+        <div class="modal-container" @click.stop>
+            <div class="modal-header">
+                <h3>单击M键模式</h3>
+                <p class="modal-subtitle">配置在聊天主界面触发轻触M键时的响应快捷姿态</p>
+            </div>
+            <div class="modal-scroll-area">
+                <div class="checkbox-list">
+                    <div class="checkbox-item" :class="{ selected: tempClickMMode === '进入通讯录' }" @click="tempClickMMode = '进入通讯录'"><span class="checkbox-name">进入通讯录</span><div class="check-box-icon"></div></div>
+                    <div class="checkbox-item" :class="{ selected: tempClickMMode === '进入最近好友聊天页面' }" @click="tempClickMMode = '进入最近好友聊天页面'"><span class="checkbox-name">进入最近好友聊天页面</span><div class="check-box-icon"></div></div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" @click="closeClickMModal">取消</button>
+                <button class="btn-confirm" @click="confirmClickMMode">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-mask" :class="{ show: isPressMModalVisible }" @click="closePressMModal">
+        <div class="modal-container" @click.stop>
+            <div class="modal-header">
+                <h3>长按M键模式</h3>
+                <p class="modal-subtitle">设定持续按住物理/虚拟M键时的安全应急策略</p>
+            </div>
+            <div class="switch-row">
+                <span class="switch-label">删除所有聊天记录</span>
+                <label class="pure-switch"><input type="checkbox" v-model="tempPressMStrategy.deleteAllRecords" /><span class="slider"></span></label>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" @click="closePressMModal">取消</button>
+                <button class="btn-confirm" @click="confirmPressMModal">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-mask" :class="{ show: isLockActionModalVisible }" @click="closeLockActionModal">
+        <div class="modal-container" @click.stop>
+            <div class="modal-header">
+                <h3>锁屏后操作</h3>
+                <p class="modal-subtitle">当设备屏幕黑屏、锁定后，系统底层将立即执行的安全防御</p>
+            </div>
+            <div class="modal-scroll-area">
+                <div class="checkbox-list">
+                    <div class="checkbox-item" :class="{ selected: tempLockAction === '不做任何动作' }" @click="tempLockAction = '不做任何动作'"><span class="checkbox-name">不做任何动作</span><div class="check-box-icon"></div></div>
+                    <div class="checkbox-item" :class="{ selected: tempLockAction === '返回桌面' }" @click="tempLockAction = '返回桌面'"><span class="checkbox-name">返回桌面</span><div class="check-box-icon"></div></div>
+                    <div class="checkbox-item" :class="{ selected: tempLockAction === '返回主页' }" @click="tempLockAction = '返回主页'"><span class="checkbox-name">返回主页</span><div class="check-box-icon"></div></div>
+                    <div class="checkbox-item" :class="{ selected: tempLockAction === '自动销毁聊天记录' }" @click="tempLockAction = '自动销毁聊天记录'"><span class="checkbox-name">自动销毁聊天记录</span><div class="check-box-icon"></div></div>
+                    <div class="checkbox-item" :class="{ selected: tempLockAction === '返回主页并销毁聊天记录' }" @click="tempLockAction = '返回主页并销毁聊天记录'"><span class="checkbox-name">返回主页并销毁聊天记录</span><div class="check-box-icon"></div></div>
+                    <div class="checkbox-item" :class="{ selected: tempLockAction === '返回桌面并销毁聊天记录' }" @click="tempLockAction = '返回桌面并销毁聊天记录'"><span class="checkbox-name">返回桌面并销毁聊天记录</span><div class="check-box-icon"></div></div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" @click="closeLockActionModal">取消</button>
+                <button class="btn-confirm" @click="confirmLockActionModal">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-mask" :class="{ show: isExitModalVisible }" @click="closeExitModal">
+        <div class="modal-container" @click.stop>
+            <div class="modal-header">
+                <h3>提示</h3>
+                <p class="modal-subtitle" style="font-size: 15px; color: var(--text-main); margin: 20px 0; text-align: left; line-height: 1.5;">
+                    退出后您将暂时无法接收到最新消息，是否确定退出？
+                </p>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" @click="closeExitModal">取消</button>
+                <button class="btn-confirm" style="background-color: var(--color-red);" @click="confirmExitApp">确定</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const { createApp, ref, onMounted, watch } = Vue;
+
+    const hoursArray = Array.from({ length: 24 }, (_, i) => i);
+    const minutesArray = Array.from({ length: 60 }, (_, i) => i);
+    const ITEM_HEIGHT = 40;
+
+    createApp({
+        setup() {
+            const nickname = ref('可爱喵喵');
+            const userid = ref('520521');
+            const versionName = ref('v2.18');
+
+            // VIP 数据核心存储
+            const vipTimestamp = ref(0);
+            const formattedVipTime = ref(''); // 用于界面显示的 YYYY-MM-DD 字符串
+            const isVipModalVisible = ref(false);
+
+            // 控制退出弹窗的状态
+            const isExitModalVisible = ref(false);
+
+            // 彻底修正的防背景滚动滚动逻辑（确保状态改变时移除 class）
+            const lockBackground = (shouldLock) => {
+                if (shouldLock) {
+                    document.body.classList.add('modal-open');
+                } else {
+                    if (!isBurnModalVisible.value && !isStrategyModalVisible.value && !isRemindModalVisible.value &&
+                        !isLockMechanismModalVisible.value && !isAuthModalVisible.value && !isClickMModalVisible.value &&
+                        !isPressMModalVisible.value && !isLockActionModalVisible.value && !isExitModalVisible.value && !isVipModalVisible.value) {
+                        document.body.classList.remove('modal-open');
+                    }
+                }
+            };
+
+            // ---- VIP 权限控制方法 ----
+            const checkVip = () => {
+                const currentTimestamp = Math.floor(Date.now() / 1000); // 秒级时间戳
+                return vipTimestamp.value >= currentTimestamp;
+            };
+
+            const showVipAlert = () => {
+                isVipModalVisible.value = true;
+            };
+
+            // 用于拦截 <a> 标签跳转
+            const handleVipLink = (targetUrl) => {
+                if (checkVip()) {
+                    window.location.href = targetUrl;
+                } else {
+                    showVipAlert();
+                }
+            };
+
+            // 将时间戳解析为 YYYY-MM-DD 格式
+            const parseVipTimeToFormat = (ts) => {
+                if (!ts || ts <= 0) return '(未激活)';
+                // 判断是秒级还是毫秒级戳（10位为秒级，乘1000变为毫秒）
+                const date = new Date(String(ts).length === 10 ? ts * 1000 : ts);
+
+                let year = date.getFullYear();
+                let month = String(date.getMonth() + 1).padStart(2, '0');
+                let day = String(date.getDate()).padStart(2, '0');
+
+                return `(至 ${year}-${month}-${day})`;
+            };
+
+            // ---- 桥接点击函数映射 ----
+            const clickToServer = () => {
+                if (window.AndroidBridge && typeof window.AndroidBridge.toServer === 'function') {
+                    window.AndroidBridge.toServer();
+                }
+            };
+
+            const clickToUpdate = () => {
+                if (window.AndroidBridge && typeof window.AndroidBridge.toUpdate === 'function') {
+                    window.AndroidBridge.toUpdate();
+                }
+            };
+
+            const clickCleanCache = () => {
+                if (window.AndroidBridge && typeof window.AndroidBridge.Cleancache === 'function') {
+                    window.AndroidBridge.Cleancache();
+                }
+            };
+
+            // ---- 退出安全模式业务逻辑 ----
+            const openExitModal = () => {
+                isExitModalVisible.value = true;
+            };
+
+            const closeExitModal = () => {
+                isExitModalVisible.value = false;
+            };
+
+            const confirmExitApp = () => {
+                closeExitModal();
+                if (window.AndroidBridge && typeof window.AndroidBridge.ExitApp === 'function') {
+                    window.AndroidBridge.ExitApp();
+                }
+            };
+
+            // ---- 状态 1：聊天记录自动焚毁 ----
+            const currentBurnText = ref('不自动销毁聊天记录'); const isBurnEnabled = ref(false); const savedHourIndex = ref(1); const savedMinuteIndex = ref(0); const isBurnModalVisible = ref(false); const tempBurnEnabled = ref(false); const tempHourIndex = ref(1); const tempMinuteIndex = ref(0); const hourOffset = ref(0); const minuteOffset = ref(0); let startY = 0, startOffset = 0; const getOffsetByIndex = (index) => -index * ITEM_HEIGHT;
+            const openBurnModal = () => { tempBurnEnabled.value = isBurnEnabled.value; tempHourIndex.value = savedHourIndex.value; tempMinuteIndex.value = savedMinuteIndex.value; hourOffset.value = getOffsetByIndex(tempHourIndex.value); minuteOffset.value = getOffsetByIndex(tempMinuteIndex.value); isBurnModalVisible.value = true; };
+            const closeBurnModal = () => { isBurnModalVisible.value = false; };
+            const onTouchStart = (e, type) => { startY = e.touches[0].clientY; startOffset = type === 'hour' ? hourOffset.value : minuteOffset.value; };
+            const onTouchMove = (e, type) => { e.preventDefault(); const currentY = e.touches[0].clientY; const diff = currentY - startY; if (type === 'hour') hourOffset.value = startOffset + diff; else minuteOffset.value = startOffset + diff; };
+            const onTouchEnd = (e, type) => { if (type === 'hour') { let index = Math.round(-hourOffset.value / ITEM_HEIGHT); index = Math.max(0, Math.min(index, hoursArray.length - 1)); tempHourIndex.value = index; hourOffset.value = getOffsetByIndex(index); } else { let index = Math.round(-minuteOffset.value / ITEM_HEIGHT); index = Math.max(0, Math.min(index, minutesArray.length - 1)); tempMinuteIndex.value = index; minuteOffset.value = getOffsetByIndex(index); } };
+
+            const confirmBurnModal = () => {
+                isBurnEnabled.value = tempBurnEnabled.value; savedHourIndex.value = tempHourIndex.value; savedMinuteIndex.value = tempMinuteIndex.value;
+                if (!isBurnEnabled.value) { currentBurnText.value = '不自动销毁聊天记录'; }
+                else if (savedHourIndex.value === 0 && savedMinuteIndex.value === 0) { currentBurnText.value = '立即自动销毁聊天记录'; }
+                else { currentBurnText.value = `${savedHourIndex.value} 小时 ${savedMinuteIndex.value} 分钟后自动销毁`; }
+                if (window.AndroidBridge && typeof window.AndroidBridge.setBurnStatus === 'function') {
+                    if (isBurnEnabled.value) {
+                        const hh = String(savedHourIndex.value).padStart(2, '0'); const ss = String(savedMinuteIndex.value).padStart(2, '0');
+                        window.AndroidBridge.setBurnStatus("setting_deletetime", hh + ss);
+                    } else { window.AndroidBridge.setBurnStatus("setting_deletetime", "delete_sp"); }
+                }
+                closeBurnModal();
+            };
+
+            // ---- 状态 2：即时焚毁策略 ----
+            const currentStrategyText = ref('未开启任何即时策略'); const strategy = ref({ friendReceived: false, readAndBurn: false, exitChatBurn: false }); const isStrategyModalVisible = ref(false); const tempStrategy = ref({ friendReceived: false, readAndBurn: false, exitChatBurn: false });
+            const openStrategyModal = () => { tempStrategy.value = { ...strategy.value }; isStrategyModalVisible.value = true; };
+            const closeStrategyModal = () => { isStrategyModalVisible.value = false; };
+            const confirmStrategyModal = () => { strategy.value = { ...tempStrategy.value }; const enabledLabels = []; if (strategy.value.friendReceived) enabledLabels.push('收到即焚'); if (strategy.value.readAndBurn) enabledLabels.push('阅后即焚'); if (strategy.value.exitChatBurn) enabledLabels.push('退出销毁'); if (enabledLabels.length > 0) currentStrategyText.value = enabledLabels.join('、'); else currentStrategyText.value = '未开启任何即时策略'; if (window.AndroidBridge && typeof window.AndroidBridge.setBurnStatus === 'function') { window.AndroidBridge.setBurnStatus("switch_zidongfenhui", strategy.value.friendReceived ? 1 : 0); window.AndroidBridge.setBurnStatus("switch_duhoufenhui", strategy.value.readAndBurn ? 1 : 0); window.AndroidBridge.setBurnStatus("switch_backdelete", strategy.value.exitChatBurn ? 1 : 0); } closeStrategyModal(); };
+
+            // ---- 状态 3：消息提醒设置 ----
+            const currentRemindText = ref('声音提醒 (默认)、系统震动'); const remind = ref({ playSound: true, vibrate: true, shortVibrate: false, selectedRingtone: 1 }); const isRemindModalVisible = ref(false); const tempRemind = ref({ playSound: true, vibrate: true, shortVibrate: false, selectedRingtone: 1 });
+            const ringtoneNames = ref(['默认', '叮咚', '萌宠', '干练', '循进', '清脆']);
+            const openRemindModal = () => { tempRemind.value = { ...remind.value }; isRemindModalVisible.value = true; };
+            const closeRemindModal = () => { isRemindModalVisible.value = false; };
+            const confirmRemindModal = () => {
+                remind.value = { ...tempRemind.value }; if(!remind.value.vibrate) remind.value.shortVibrate = false;
+                const enabledLabels = []; if (remind.value.playSound) { const nameText = ringtoneNames.value[remind.value.selectedRingtone - 1] || '默认'; enabledLabels.push(`声音提醒 (${nameText})`); }
+                if (remind.value.vibrate) enabledLabels.push(remind.value.shortVibrate ? '短震动' : '系统震动');
+                if (enabledLabels.length > 0) currentRemindText.value = enabledLabels.join('、'); else currentRemindText.value = '全部提醒已关闭';
+                if (window.AndroidBridge && typeof window.AndroidBridge.setBurnStatus === 'function') {
+                    window.AndroidBridge.setBurnStatus("OpenSound", remind.value.playSound ? 1 : 0); window.AndroidBridge.setBurnStatus("OpenVibrate", remind.value.vibrate ? 1 : 0);
+                    window.AndroidBridge.setBurnStatus("ShortVibrate", remind.value.shortVibrate ? 1 : 0); window.AndroidBridge.setBurnStatus("sound", remind.value.selectedRingtone);
+                }
+                closeRemindModal();
+            };
+            const selectRingtoneItem = (num) => { tempRemind.value.selectedRingtone = num; if (window.AndroidBridge && typeof window.AndroidBridge.PlayRing === 'function') { window.AndroidBridge.PlayRing(num); } };
+
+            // ---- 状态 4：聊天与锁定机制 ----
+            const currentLockMechanismText = ref('输入隐藏、回车发送、返回桌面锁定'); const lockMechanism = ref({ hideOnInput: true, enterToSend: true, lockOnDesktop: true, lockOnHome: true }); const isLockMechanismModalVisible = ref(false); const tempLockMechanism = ref({ hideOnInput: true, enterToSend: true, lockOnDesktop: true, lockOnHome: true });
+            const openLockMechanismModal = () => { tempLockMechanism.value = { ...lockMechanism.value }; isLockMechanismModalVisible.value = true; };
+            const closeLockMechanismModal = () => { isLockMechanismModalVisible.value = false; };
+            const confirmLockMechanismModal = () => {
+                lockMechanism.value = { ...tempLockMechanism.value }; const enabledLabels = [];
+                if (lockMechanism.value.hideOnInput) enabledLabels.push('输入隐藏'); if (lockMechanism.value.enterToSend) enabledLabels.push('回车发送'); if (lockMechanism.value.lockOnDesktop) enabledLabels.push('桌面锁定'); if (lockMechanism.value.lockOnHome) enabledLabels.push('首页锁定');
+                if (enabledLabels.length > 0) currentLockMechanismText.value = enabledLabels.join('、'); else currentLockMechanismText.value = '未开启任何限制策略';
+                if (window.AndroidBridge && typeof window.AndroidBridge.setBurnStatus === 'function') {
+                    window.AndroidBridge.setBurnStatus("switch_hidechat", lockMechanism.value.hideOnInput ? 1 : 0); window.AndroidBridge.setBurnStatus("enterkey_sendmessage", lockMechanism.value.enterToSend ? 1 : 0);
+                    window.AndroidBridge.setBurnStatus("switch_homelock", lockMechanism.value.lockOnDesktop ? 1 : 0); window.AndroidBridge.setBurnStatus("switch_apphomelock", lockMechanism.value.lockOnHome ? 1 : 0);
+                }
+                closeLockMechanismModal();
+            };
+
+            // ---- 状态 5：安全验证模式 ----
+            const currentAuthText = ref('密码验证'); const authMode = ref('密码验证'); const isAuthModalVisible = ref(false); const tempAuthMode = ref('密码验证');
+            const openAuthModal = () => { tempAuthMode.value = authMode.value; isAuthModalVisible.value = true; };
+            const closeAuthModal = () => { isAuthModalVisible.value = false; };
+            const confirmAuthModal = () => {
+                authMode.value = tempAuthMode.value; currentAuthText.value = authMode.value;
+                if (window.AndroidBridge && typeof window.AndroidBridge.setBurnStatus === 'function') {
+                    let modeVal = 1; if (authMode.value === '指纹验证') modeVal = 0; else if (authMode.value === '密码验证') modeVal = 1; else if (authMode.value === '无需验证') modeVal = 2;
+                    window.AndroidBridge.setBurnStatus("setting_yanzhengmode", modeVal);
+                }
+                closeAuthModal();
+            };
+
+            // ---- 状态 6：单击M键模式 ----
+            const currentClickMText = ref('进入通讯录'); const clickMMode = ref('进入通讯录'); const isClickMModalVisible = ref(false); const tempClickMMode = ref('进入通讯录');
+            const openClickMModal = () => { tempClickMMode.value = clickMMode.value; isClickMModalVisible.value = true; };
+            const closeClickMModal = () => { isClickMModalVisible.value = false; };
+            const confirmClickMMode = () => { clickMMode.value = tempClickMMode.value; currentClickMText.value = clickMMode.value; if (window.AndroidBridge && typeof window.AndroidBridge.setBurnStatus === 'function') { const mKeyVal = (clickMMode.value === '进入最近好友聊天页面') ? 1 : 0; window.AndroidBridge.setBurnStatus("setting_clickmkey", mKeyVal); } closeClickMModal(); };
+
+            // ---- 状态 7：长按M键模式 ----
+            const currentPressMText = ref('未开启危险动作'); const pressMStrategy = ref({ deleteAllRecords: false }); const isPressMModalVisible = ref(false); const tempPressMStrategy = ref({ deleteAllRecords: false });
+            const openPressMModal = () => { tempPressMStrategy.value = { ...pressMStrategy.value }; isPressMModalVisible.value = true; };
+            const closePressMModal = () => { isPressMModalVisible.value = false; };
+            const confirmPressMModal = () => { pressMStrategy.value = { ...tempPressMStrategy.value }; currentPressMText.value = pressMStrategy.value.deleteAllRecords ? '删除所有聊天记录' : '未开启危险动作'; if (window.AndroidBridge && typeof window.AndroidBridge.setBurnStatus === 'function') { window.AndroidBridge.setBurnStatus("setting_longclickmkey", pressMStrategy.value.deleteAllRecords ? 1 : 0); } closePressMModal(); };
+
+            // ---- 状态 8：锁屏后操作 ----
+            const currentLockActionText = ref('不做任何动作'); const lockAction = ref('不做任何动作'); const isLockActionModalVisible = ref(false); const tempLockAction = ref('不做任何动作'); const lockActionsArr = ['不做任何动作', '返回桌面', '返回主页', '自动销毁聊天记录', '返回主页并销毁聊天记录', '返回桌面并销毁聊天记录'];
+            const openLockActionModal = () => { tempLockAction.value = lockAction.value; isLockActionModalVisible.value = true; };
+            const closeLockActionModal = () => { isLockActionModalVisible.value = false; };
+            const confirmLockActionModal = () => { lockAction.value = tempLockAction.value; currentLockActionText.value = lockAction.value; if (window.AndroidBridge && typeof window.AndroidBridge.setBurnStatus === 'function') { const actionIdx = lockActionsArr.indexOf(lockAction.value); window.AndroidBridge.setBurnStatus("setting_suopingmode", actionIdx !== -1 ? actionIdx : 0); } closeLockActionModal(); };
+
+            // ---- 状态 9：个性化应用图标自定组件 ----
+            const selectedAppIcon = ref(0);
+            const appIcons = ref([
+                { id: 'midian', name: '密电', char: '密', bgColor: '#101010' },
+                { id: 'miquan', name: '密圈', char: '圈', bgColor: '#2e7d32' },
+                { id: 'toutiao', name: '今日头条', char: '头', bgColor: '#d32f2f' },
+                { id: 'xigua', name: '西瓜视频', char: '瓜', bgColor: '#ff5722' },
+                { id: 'douyin', name: '抖音', char: '抖', bgColor: '#000000' },
+                { id: 'taobao', name: '淘宝', char: '淘', bgColor: '#ff9800' },
+                { id: 'wangyi', name: '网易新闻', char: '易', bgColor: '#e53935' },
+                { id: 'tencent', name: '腾讯新闻', char: '讯', bgColor: '#1e88e5' }
+            ]);
+
+            const selectAppIcon = (index) => {
+                selectedAppIcon.value = index;
+                if (window.AndroidBridge && typeof window.AndroidBridge.setBurnStatus === 'function') {
+                    window.AndroidBridge.setBurnStatus("setting_appitem", index);
+                }
+                if (window.AndroidBridge && typeof window.AndroidBridge.setHomePage === 'function') {
+                    window.AndroidBridge.setHomePage(index);
+                }
+            };
+
+            const closeAllActiveModals = () => {
+                if (
+                    isBurnModalVisible.value || isStrategyModalVisible.value || isRemindModalVisible.value ||
+                    isLockMechanismModalVisible.value || isAuthModalVisible.value || isClickMModalVisible.value ||
+                    isPressMModalVisible.value || isLockActionModalVisible.value || isExitModalVisible.value || isVipModalVisible.value
+                ) {
+                    isBurnModalVisible.value = false; isStrategyModalVisible.value = false; isRemindModalVisible.value = false;
+                    isLockMechanismModalVisible.value = false; isAuthModalVisible.value = false; isClickMModalVisible.value = false;
+                    isPressMModalVisible.value = false; isLockActionModalVisible.value = false; isExitModalVisible.value = false;
+                    isVipModalVisible.value = false;
+                    return true;
+                }
+                return false;
+            };
+
+            const hasAnyModalOpen = () => {
+                return (
+                    isBurnModalVisible.value || isStrategyModalVisible.value || isRemindModalVisible.value ||
+                    isLockMechanismModalVisible.value || isAuthModalVisible.value || isClickMModalVisible.value ||
+                    isPressMModalVisible.value || isLockActionModalVisible.value || isExitModalVisible.value || isVipModalVisible.value
+                );
+            };
+
+            // 通过统一的 Watch 处理器来动态控制 lockBackground，避免错漏任何状态导致的无法滚动 Bug
+            watch(
+                () => [
+                    isBurnModalVisible.value, isStrategyModalVisible.value, isRemindModalVisible.value,
+                    isLockMechanismModalVisible.value, isAuthModalVisible.value, isClickMModalVisible.value,
+                    isPressMModalVisible.value, isLockActionModalVisible.value, isExitModalVisible.value, isVipModalVisible.value
+                ],
+                (newVals) => {
+                    const isOpen = newVals.some(v => v === true);
+                    lockBackground(isOpen); // 统筹锁死或释放背景滚动
+                    if (isOpen) { if (history.state !== 'modal-active') history.pushState('modal-active', null, null); }
+                    else { if (history.state === 'modal-active') history.back(); }
+                }
+            );
+
+            window.addEventListener('popstate', () => { if (hasAnyModalOpen()) closeAllActiveModals(); });
+
+            // ---- 还原恢复链路 ----
+            const initConfigFromAndroid = () => {
+                if (window.AndroidBridge && typeof window.AndroidBridge.getConfig === 'function') {
+                    try {
+                        const jsonStr = window.AndroidBridge.getAndroidConfig ? window.AndroidBridge.getAndroidConfig() : window.AndroidBridge.getConfig();
+                        if (!jsonStr) return;
+
+                        const config = JSON.parse(jsonStr);
+                        console.log("加载全局 SharedPreferences 存储结构:", config);
+
+                        // 从 SP 解析 vip 到期时间戳并转化为 YYYY-MM-DD 格式
+                        if (config.hasOwnProperty('vip') && config.vip) {
+                            vipTimestamp.value = parseInt(config.vip, 10) || 0;
+                            formattedVipTime.value = parseVipTimeToFormat(vipTimestamp.value);
+                        } else {
+                            formattedVipTime.value = '(VIP权限未生效)';
+                        }
+
+                        if (config.hasOwnProperty('nickname') && config.nickname) { nickname.value = config.nickname; }
+                        if (config.hasOwnProperty('userid') && config.userid) { userid.value = config.userid; }
+
+                        // 读取Android端传入的 versionName
+                        if (config.hasOwnProperty('versionName') && config.versionName) {
+                            versionName.value = config.versionName;
+                        }
+
+                        // 自动销毁时间模块
+                        if (config.hasOwnProperty('setting_deletetime') && config.setting_deletetime && config.setting_deletetime !== "0000" && config.setting_deletetime !== "delete_sp") {
+                            isBurnEnabled.value = true; tempBurnEnabled.value = true;
+                            const timeCode = String(config.setting_deletetime);
+                            if (timeCode.length === 4) {
+                                const hh = parseInt(timeCode.substring(0, 2), 10) || 0; const ss = parseInt(timeCode.substring(2, 4), 10) || 0;
+                                savedHourIndex.value = hh; tempHourIndex.value = hh; savedMinuteIndex.value = ss; tempMinuteIndex.value = ss;
+                                hourOffset.value = -hh * ITEM_HEIGHT; minuteOffset.value = -ss * ITEM_HEIGHT;
+                            }
+                        } else { isBurnEnabled.value = false; tempBurnEnabled.value = false; savedHourIndex.value = 1; savedMinuteIndex.value = 0; }
+                        currentBurnText.value = !isBurnEnabled.value ? '不自动销毁聊天记录' : (savedHourIndex.value === 0 && savedMinuteIndex.value === 0 ? '立即自动销毁聊天记录' : `${savedHourIndex.value} 小时 ${savedMinuteIndex.value} 分钟后自动销毁`);
+
+                        // 即时焚毁策略模块
+                        strategy.value.friendReceived = (config.switch_zidongfenhui === 1 || config.switch_zidongfenhui === "1"); tempStrategy.value.friendReceived = strategy.value.friendReceived;
+                        strategy.value.readAndBurn = (config.switch_duhoufenhui === 1 || config.switch_duhoufenhui === "1"); tempStrategy.value.readAndBurn = strategy.value.readAndBurn;
+                        strategy.value.exitChatBurn = (config.switch_backdelete === 1 || config.switch_backdelete === "1"); tempStrategy.value.exitChatBurn = strategy.value.exitChatBurn;
+                        const stratLabels = []; if (strategy.value.friendReceived) stratLabels.push('收到即焚'); if (strategy.value.readAndBurn) stratLabels.push('阅后即焚'); if (strategy.value.exitChatBurn) stratLabels.push('退出销毁');
+                        currentStrategyText.value = stratLabels.length > 0 ? stratLabels.join('、') : '未开启任何即时策略';
+
+                        // 消息提醒设置模块
+                        remind.value.playSound = config.hasOwnProperty('OpenSound') ? (config.OpenSound === 1 || config.OpenSound === "1") : true; tempRemind.value.playSound = remind.value.playSound;
+                        remind.value.vibrate = config.hasOwnProperty('OpenVibrate') ? (config.OpenVibrate === 1 || config.OpenVibrate === "1") : true; tempRemind.value.vibrate = remind.value.vibrate;
+                        remind.value.shortVibrate = config.hasOwnProperty('ShortVibrate') ? (config.ShortVibrate === 1 || config.ShortVibrate === "1") : false; tempRemind.value.shortVibrate = remind.value.shortVibrate;
+                        if (config.hasOwnProperty('sound')) { const sndIdx = parseInt(config.sound, 10); remind.value.selectedRingtone = (sndIdx >= 1 && sndIdx <= 6) ? sndIdx : 1; }
+                        tempRemind.value.selectedRingtone = remind.value.selectedRingtone;
+                        const remindLabels = []; if (remind.value.playSound) { const nameText = ringtoneNames.value[remind.value.selectedRingtone - 1] || '默认'; remindLabels.push(`声音提醒 (${nameText})`); }
+                        if (remind.value.vibrate) remindLabels.push(remind.value.shortVibrate ? '短震动' : '系统震动');
+                        currentRemindText.value = remindLabels.length > 0 ? remindLabels.join('、') : '全部提醒已关闭';
+
+                        // 聊天与锁定机制模块
+                        lockMechanism.value.hideOnInput = config.hasOwnProperty('switch_hidechat') ? (config.switch_hidechat === 1 || config.switch_hidechat === "1") : true; tempLockMechanism.value.hideOnInput = lockMechanism.value.hideOnInput;
+                        lockMechanism.value.enterToSend = config.hasOwnProperty('enterkey_sendmessage') ? (config.enterkey_sendmessage === 1 || config.enterkey_sendmessage === "1") : true; tempLockMechanism.value.enterToSend = lockMechanism.value.enterToSend;
+                        lockMechanism.value.lockOnDesktop = config.hasOwnProperty('switch_homelock') ? (config.switch_homelock === 1 || config.switch_homelock === "1") : true; tempLockMechanism.value.lockOnDesktop = lockMechanism.value.lockOnDesktop;
+                        lockMechanism.value.lockOnHome = config.hasOwnProperty('switch_apphomelock') ? (config.switch_apphomelock === 1 || config.switch_apphomelock === "1") : false; tempLockMechanism.value.lockOnHome = lockMechanism.value.lockOnHome;
+                        const lockLabels = []; if (lockMechanism.value.hideOnInput) lockLabels.push('输入隐藏'); if (lockMechanism.value.enterToSend) lockLabels.push('回车发送'); if (lockMechanism.value.lockOnDesktop) lockLabels.push('桌面锁定'); if (lockMechanism.value.lockOnHome) lockLabels.push('首页锁定');
+                        currentLockMechanismText.value = lockLabels.length > 0 ? lockLabels.join('、') : '未开启任何限制策略';
+
+                        // 安全验证验证
+                        if (config.hasOwnProperty('setting_yanzhengmode')) {
+                            const modeVal = parseInt(config.setting_yanzhengmode, 10);
+                            if (modeVal === 0) authMode.value = '指纹验证'; else if (modeVal === 1) authMode.value = '密码验证'; else if (modeVal === 2) authMode.value = '无需验证'; else authMode.value = '密码验证';
+                        } else { authMode.value = '密码验证'; }
+                        tempAuthMode.value = authMode.value; currentAuthText.value = authMode.value;
+
+                        // 单击M键模式
+                        if (config.hasOwnProperty('setting_clickmkey')) { const mKeyVal = parseInt(config.setting_clickmkey, 10); clickMMode.value = (mKeyVal === 1) ? '进入最近好友聊天页面' : '进入通讯录'; } else { clickMMode.value = '进入通讯录'; }
+                        tempClickMMode.value = clickMMode.value; currentClickMText.value = clickMMode.value;
+
+                        // 长按M键模式
+                        if (config.hasOwnProperty('setting_longclickmkey')) { const lKeyVal = parseInt(config.setting_longclickmkey, 10); pressMStrategy.value.deleteAllRecords = (lKeyVal === 1); } else { pressMStrategy.value.deleteAllRecords = false; }
+                        tempPressMStrategy.value.deleteAllRecords = pressMStrategy.value.deleteAllRecords; currentPressMText.value = pressMStrategy.value.deleteAllRecords ? '删除所有聊天记录' : '未开启危险动作';
+
+                        // 锁屏后操作
+                        if (config.hasOwnProperty('setting_suopingmode')) { const actionIdx = parseInt(config.setting_suopingmode, 10); if (actionIdx >= 0 && actionIdx < lockActionsArr.length) lockAction.value = lockActionsArr[actionIdx]; else lockAction.value = lockActionsArr[0]; } else { lockAction.value = lockActionsArr[0]; }
+                        tempLockAction.value = lockAction.value; currentLockActionText.value = lockAction.value;
+
+                        // 应用图标
+                        if (config.hasOwnProperty('setting_appitem')) { const savedIndex = parseInt(config.setting_appitem, 10); if (savedIndex >= 0 && savedIndex < appIcons.value.length) selectedAppIcon.value = savedIndex; }
+
+                    } catch (e) { console.error("恢复链路失败:", e); }
+                }
+            };
+
+            onMounted(() => {
+                initConfigFromAndroid();
+                window.onAndroidBackKey = () => { return closeAllActiveModals(); };
+            });
+
+            return {
+                nickname, userid, versionName, vipTimestamp, formattedVipTime, isVipModalVisible, checkVip, showVipAlert, handleVipLink,
+                clickToServer, clickToUpdate, clickCleanCache,
+                isExitModalVisible, openExitModal, closeExitModal, confirmExitApp,
+                currentBurnText, isBurnModalVisible, tempBurnEnabled, tempHourIndex, tempMinuteIndex, hourOffset, minuteOffset, hours: hoursArray, minutes: minutesArray,
+                openBurnModal, closeBurnModal, confirmBurnModal, onTouchStart, onTouchMove, onTouchEnd,
+                currentStrategyText, isStrategyModalVisible, tempStrategy, openStrategyModal, closeStrategyModal, confirmStrategyModal,
+                currentRemindText, isRemindModalVisible, tempRemind, openRemindModal, closeRemindModal, confirmRemindModal,
+                ringtoneNames, selectRingtoneItem,
+                currentLockMechanismText, isLockMechanismModalVisible, tempLockMechanism, openLockMechanismModal, closeLockMechanismModal, confirmLockMechanismModal,
+
+                currentAuthText, isAuthModalVisible, tempAuthMode, openAuthModal, closeAuthModal, confirmAuthModal,
+                currentClickMText, isClickMModalVisible, tempClickMMode, openClickMModal, closeClickMModal, confirmClickMMode,
+                currentPressMText, isPressMModalVisible, tempPressMStrategy, openPressMModal, closePressMModal, confirmPressMModal,
+                currentLockActionText, isLockActionModalVisible, tempLockAction, openLockActionModal, closeLockActionModal, confirmLockActionModal,
+
+                appIcons, selectedAppIcon, selectAppIcon
+            };
+        }
+    }).mount('#app');
+</script>
+
+</body>
+</html>

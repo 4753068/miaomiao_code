@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>绑定公众号</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* 基础样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* 页面外层容器，自适应移动端与PC */
+        .app-container {
+            width: 100%;
+            max-width: 400px;
+            background-color: #ffffff;
+            border-radius: 30px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 主卡片容器 */
+        .qr-card {
+            background: linear-gradient(180deg, #e1f7ec 0%, #edf9f3 100%);
+            border-radius: 28px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 卡片顶部的装饰效果 */
+        .qr-card::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -10%;
+            width: 120%;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* 顶部文字标题与描述区域 */
+        .header-section {
+            text-align: center;
+            width: 100%;
+            margin-bottom: 20px;
+            z-index: 1;
+        }
+
+        .title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a251f;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: #5c6861;
+            line-height: 1.5;
+            text-align: justify;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(16, 185, 129, 0.1);
+        }
+
+        /* 步骤说明基础样式 */
+        .step-info {
+            background-color: #ffffff;
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 16px;
+            z-index: 1;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            margin-bottom: 16px;
+        }
+
+        .step-text {
+            font-size: 13px;
+            color: #3a453f;
+            line-height: 1.6;
+            text-align: justify;
+        }
+
+        .step-title {
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        /* 二维码区域 */
+        .qr-container {
+            background-color: #ffffff;
+            padding: 14px;
+            border-radius: 24px;
+            border: 6px solid #10b981; /* 经典绿色边框 */
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            margin-bottom: 16px;
+            z-index: 1;
+        }
+
+        .qr-code {
+            width: 170px;
+            height: 170px;
+            display: block;
+        }
+
+        /* 二维码中心的微标 */
+        .qr-center-logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 34px;
+            height: 34px;
+            background-color: #10b981;
+            border-radius: 50%;
+            border: 3px solid #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .qr-center-logo::after {
+            content: '';
+            width: 12px;
+            height: 12px;
+            background-color: #ffffff;
+            border-radius: 2px;
+        }
+
+        /* 绑定码卡片区域 */
+        .code-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin-top: 4px;
+        }
+
+        .code-display {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #10b981;
+            background: #f0fdf4;
+            border: 1px dashed #10b981;
+            padding: 8px 24px;
+            border-radius: 12px;
+            min-width: 160px;
+            text-align: center;
+        }
+
+        /* 复制按钮样式 */
+        .copy-btn {
+            width: 100%;
+            background-color: #10b981;
+            color: #ffffff;
+            border: none;
+            padding: 12px 20px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .copy-btn:hover {
+            background-color: #0d9488;
+        }
+
+        .copy-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* 提示弹窗 */
+        .toast {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+
+    <div class="qr-card">
+        <div class="header-section">
+            <div class="title">绑定公众号</div>
+            <div class="subtitle">
+                绑定公众号可获得远程控制功能，包括远程删除记录、远程清除安全密码（用于忘记安全密码的情况）。
+            </div>
+        </div>
+
+        <div class="step-info">
+            <div class="step-text">
+                <span class="step-title">第一步</span>
+                请用微信扫一扫以下二维码关注“分贝应用”公众号，也可通过微信搜索“分贝应用”公众号进行关注。
+            </div>
+        </div>
+
+        <div class="qr-container">
+            <img class="qr-code" id="qrImage" src="" alt="微信公众号二维码">
+            <div class="qr-center-logo"></div>
+        </div>
+
+        <div class="step-info">
+            <div class="step-text">
+                <span class="step-title">第二步</span>
+                关注后，点击屏幕下方的“应用+”，然后点击“喵喵”，再点击“绑定用户”，将以下绑定码，复制到微信公众号中填写并完成绑定。
+            </div>
+
+            <div class="code-container">
+                <div class="code-display" id="bindingCode">获取中...</div>
+                <button class="copy-btn" onclick="copyBindingCode()">复制绑定码</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="toast" id="toast">已成功复制绑定码</div>
+
+<script>
+    // 获取 URL 中的 GET 参数的通用函数
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    // 1. 读取并处理 's' 参数生成二维码 (默认使用原图附带的数据或一个占位图)
+    const qrData = getQueryParam('s');
+    const finalQrData = qrData ? encodeURIComponent(qrData) : encodeURIComponent('https://weixin.qq.com/r/FenBeiAppPlaceholder');
+    document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=${finalQrData}`;
+
+    // 2. 读取 SP 数据并请求网络绑定码
+    function fetchBindingCodeFromAPI() {
+        let config = null;
+
+        // 尝试从 Android 桥接获取 SP 数据
+        if (window.AndroidBridge && typeof window.AndroidBridge.getConfig === 'function') {
+            try {
+                const jsonStr = window.AndroidBridge.getAndroidConfig ? window.AndroidBridge.getAndroidConfig() : window.AndroidBridge.getConfig();
+                if (jsonStr) {
+                    config = JSON.parse(jsonStr);
+                }
+            } catch (e) {
+                console.error("解析 SP 数据失败:", e);
+            }
+        }
+
+        // 提取 uid，兼容 userid 字段以防万一
+        const uid = config ? (config.uid || config.userid) : null;
+
+        if (uid) {
+            // 构造 POST 参数
+            const formData = new URLSearchParams();
+            formData.append('uid', uid);
+
+            // 发起 POST 请求
+            fetch('https://member.am930.cn/?data=member&file=member&func=get_bindcode', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: formData.toString()
+            })
+            .then(response => response.text())
+            .then(data => {
+                try {
+                    // 解析后端返回的 JSON 数据： {"code":1, "bind_code":"513-1125"}
+                    const jsonObj = JSON.parse(data);
+                    if (jsonObj && jsonObj.bind_code) {
+                        // 成功获取到 bind_code 字段，直接显示
+                        document.getElementById('bindingCode').innerText = jsonObj.bind_code;
+                    } else {
+                        // 如果没有 bind_code 字段，兜底显示失败
+                        document.getElementById('bindingCode').innerText = "获取失败";
+                    }
+                } catch (e) {
+                    console.error("解析返回数据失败:", e);
+                    document.getElementById('bindingCode').innerText = "数据异常";
+                }
+            })
+            .catch(error => {
+                console.error("请求绑定码发生错误:", error);
+                document.getElementById('bindingCode').innerText = "网络错误";
+            });
+        } else {
+            // 如果 SP 里没有拿到 uid，看看 URL 里有没有传 code 兜底
+            const bindCode = getQueryParam('code');
+            if (bindCode) {
+                document.getElementById('bindingCode').innerText = bindCode;
+            } else {
+                document.getElementById('bindingCode').innerText = "未获取到UID";
+            }
+        }
+    }
+
+    // 页面加载完毕后执行请求
+    window.addEventListener('DOMContentLoaded', fetchBindingCodeFromAPI);
+
+    // 3. 复制绑定码到剪贴板功能
+    function copyBindingCode() {
+        const codeText = document.getElementById('bindingCode').innerText;
+        // 如果处于异常状态，禁止复制
+        if (codeText === '获取中...' || codeText === '获取失败' || codeText === '数据异常' || codeText === '网络错误' || codeText === '未获取到UID') {
+            return;
+        }
+
+        // 使用现代 Clipboard API 或后备方案
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(codeText).then(showToast).catch(fallbackCopy);
+        } else {
+            fallbackCopy();
+        }
+
+        function fallbackCopy() {
+            const tempInput = document.createElement('input');
+            tempInput.value = codeText;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showToast();
+        }
+    }
+
+    // 显示提示弹窗
+    function showToast() {
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 2000);
+    }
+</script>
+
+</body>
+</html>

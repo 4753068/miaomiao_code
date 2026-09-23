@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        tools:ignore="MissingConstraints">
+
+        <LinearLayout
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/btnyuyin"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/btnyuyin"
+                android:layout_gravity="center"
+                android:clickable="true"
+                android:layout_margin="10dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:layout_marginRight="5dp"
+            android:orientation="vertical">
+
+            <Emoji.ApngTextView
+                android:id="@+id/txtYuyin"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="16sp"
+                android:textColor="#999"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="长按发送语音"
+                android:layout_margin="10dp"
+                android:minHeight="35dp"
+                android:visibility="gone"
+                ></Emoji.ApngTextView>
+
+            <EditText
+            android:id="@+id/edit_message"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:minHeight="35dp"
+            android:textSize="16sp"
+            android:background="@color/white"
+                android:hint="点击输入信息"
+            android:textColor="@color/black"
+            android:layout_margin="8dp"
+            android:layout_gravity="center"
+            android:inputType="textMultiLine" />
+
+            <LinearLayout
+                android:id="@+id/YingyongBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:layout_margin="5dp"
+                android:visibility="gone"
+                android:background="@drawable/bg_capsule_button_gay"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:orientation="vertical"
+                    >
+                <TextView
+                android:id="@+id/txtYingyong"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="#666666"
+                android:clickable="true"
+                ></TextView>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="10"
+                    android:gravity="right"
+                    android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/btn_close_yingying"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/btn_closed"
+                    android:layout_marginLeft="10dp"
+                    android:clickable="true"
+                    android:layout_weight="10"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/btn_em"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/em"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:layout_margin="10dp" />
+    </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_sendBox"
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/btn_send"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+                android:clickable="true"
+                android:src="@drawable/send"></ImageView>
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

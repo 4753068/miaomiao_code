@@ -1,0 +1,186 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">喵喵</string>
+    <string name="app_name_toutiao" tools:ignore="DuplicateDefinition">今日头条</string>
+    <string name="app_name_tengxun">腾讯新闻</string>
+    <string name="app_name_xiaohongshu">小红书</string>
+    <string name="app_name_douyin">抖音</string>
+    <string name="app_name_wangyi">网易新闻</string>
+    <string name="app_name_xigua">西瓜视频</string>
+
+    <!-- 提示文案 -->
+    <string name="net_error_check">网络访问错误，请检查网络连接状态</string>
+    <string name="default_socket_name">喵喵</string>
+    <!-- 默认服务地址（开源版默认地址，或留空让用户自建填入） -->
+    <string name="default_data_service_url"></string>
+    <string name="default_cos_url"></string>
+    <string name="default_socket_url"></string>
+    <string name="default_socket_port"></string>
+
+    <!-- 聊天模块相关字符串 -->
+    <string name="chat_msg_sending">正在发送...</string>
+    <string name="chat_msg_send_failed_retry">发送未成功，点击重发 %1$s</string>
+    <string name="chat_msg_recalled">消息已撤回</string>
+    <string name="chat_msg_recalled_with_edit">消息已撤回 &lt;font color="#999999"&gt;[编辑]&lt;/font&gt;</string>
+    <string name="chat_member_prefix">成员 %1$s</string>
+    <string name="chat_default_friend">好友</string>
+    <string name="chat_loc_title">位置信息</string>
+    <string name="chat_loc_unknown_address">未知具体地址</string>
+    <string name="chat_loc_no_map_app">未找到可用地图程序</string>
+    <string name="chat_audio_parse_failed">语音解析失败</string>
+    <string name="chat_file_expired">文件已失效</string>
+    <string name="chat_file_downloading">该文件正在下载中，请稍候...</string>
+    <string name="chat_copy_success">已成功复制记录</string>
+    <string name="chat_recalled_timeout">信息发送时间已超过三分钟，无法撤回</string>
+    <string name="chat_network_error">网络异常，状态码: %1$d</string>
+    <string name="chat_write_failed">写入失败%1$s</string>
+    <string name="chat_msg_offline_delivered">对方离线，消息已送达</string>
+
+    <!-- 好友列表模块相关字符串 -->
+    <string name="friend_not_approved_tip">您还不是对方的好友，请审核通过后再试</string>
+    <string name="friend_export_success_tip">聊天记录已成功导出到Download目录，请妥善保管</string>
+    <string name="friend_new_apply">新的好友申请</string>
+    <string name="friend_wait_approval">正等待对方通过申请</string>
+    <string name="friend_loc_default">位置信息</string>
+    <string name="friend_loc_prefix_format">[位置] %1$s</string>
+    <string name="friend_loc_prefix">[位置]</string>
+
+    <!-- 服务器/节点列表模块相关字符串 -->
+    <string name="server_option_edit">编辑节点</string>
+    <string name="server_option_share">分享节点</string>
+    <string name="server_option_delete">删除节点</string>
+    <string name="server_dialog_title">提示</string>
+    <string name="server_dialog_delete_confirm">确定要删除该节点吗？</string>
+    <string name="server_dialog_btn_confirm">确定</string>
+    <string name="server_dialog_btn_cancel">取消</string>
+    <string name="server_toast_get_pwd_failed">获取密钥失败，请确保本地数据库已保存password</string>
+    <string name="server_toast_delete_success">节点已删除</string>
+    <string name="server_toast_delete_failed">删除失败</string>
+
+    <!-- 聊天主界面相关字符串 -->
+    <string name="chat_session_invalid">会话状态失效，请重新进入聊天</string>
+    <string name="chat_net_offline_tis">~ 网络开小差了 ~</string>
+    <string name="chat_record_permission_error">授权出错</string>
+    <string name="chat_record_permission_denied">授权申请遭拒绝</string>
+    <string name="chat_empty_msg_warning">请输入消息内容</string>
+    <string name="chat_not_friend_or_in_group">无法发送，对方不是您的好友或您不在群内</string>
+    <string name="chat_camera_permission_denied">权限被拒绝，无法启动相机</string>
+    <string name="chat_loc_permission_denied">位置权限被拒绝，无法发送当前位置</string>
+    <string name="chat_loc_getting">正在获取当前位置...</string>
+    <string name="chat_loc_current">当前位置</string>
+    <string name="chat_loc_failed_tip">定位失败，请确认GPS与权限开启后重试</string>
+    <string name="chat_friend_blocked_you">好友暂时屏蔽您的信息</string>
+    <string name="chat_group_verifying">正在验证群成员身份...</string>
+    <string name="chat_group_verify_network_error">网络异常，无法验证群成员身份，暂时无法发言</string>
+    <string name="chat_group_not_member">暂停与对方联系或您已不是该群成员，无法发送信息</string>
+    <string name="chat_file_process_error">文件处理错误: %1$s</string>
+
+
+    <!-- 备份与导出模块相关字符串 -->
+    <string name="daochu_import_complete">导入完成</string>
+    <string name="daochu_backup_complete">备份完成</string>
+    <string name="daochu_progress_format">%1$s/%2$d</string>
+
+    <!-- 群聊创建/编辑模块相关字符串 -->
+    <string name="edit_group_title_edit">修改群资料</string>
+    <string name="edit_group_subtitle_edit">更新群聊名称、公告与权限设置</string>
+    <string name="edit_group_btn_save">保存修改</string>
+    <string name="edit_group_title_create">新建群聊</string>
+    <string name="edit_group_subtitle_create">创建属于您的小圈子与多人加密会话</string>
+    <string name="edit_group_btn_create">确认创建</string>
+    <string name="edit_group_default_char">群</string>
+    <string name="edit_group_fetch_failed">获取群资料失败，请检查网络</string>
+    <string name="edit_group_parse_failed">解析群资料失败</string>
+    <string name="edit_group_image_load_failed">图片载入失败</string>
+    <string name="edit_group_crop_failed">裁剪失败: %1$s</string>
+    <string name="edit_group_unknown_error">未知错误</string>
+    <string name="edit_group_input_name_tip">请输入群聊名称</string>
+    <string name="edit_group_invite_code_empty_tip">开启验证后，邀请码不能为空</string>
+    <string name="edit_group_network_error">网络请求失败，请检查连接</string>
+    <string name="edit_group_update_success">群资料修改成功</string>
+    <string name="edit_group_create_success">群聊创建成功</string>
+
+    <!-- 好友列表主界面相关字符串 -->
+    <string name="friend_empty_list">暂时没有好友</string>
+    <string name="friend_search_empty">未搜索到相关好友</string>
+    <string name="friend_scan_no_useful_info">没找到有用信息</string>
+    <string name="friend_qr_format_error">二维码格式错误</string>
+    <string name="friend_group_qr_format_error">群二维码格式错误</string>
+    <string name="friend_qr_login_success">网页登录成功！</string>
+    <string name="friend_qr_login_failed">网页登录失败，请重试！</string>
+    <string name="friend_syncing_dialog">正在同步好友列表，请稍候...</string>
+    <string name="friend_share_text_received">已接收分享内容，请点击好友发送</string>
+    <string name="friend_share_file_received">已接收分享文件，请点击好友发送</string>
+    <string name="friend_share_file_error">解析分享文件失败或文件已被删除</string>
+    <string name="friend_share_files_count_received">已成功接收 %1$d 个文件，请点击好友发送</string>
+
+    <!-- 好友设置模块相关字符串 -->
+    <string name="friendsetting_clear_both_title">双向删除记录</string>
+    <string name="friendsetting_clear_both_message">确定要清空您与该好友设备上的所有聊天记录吗？此操作不可恢复。</string>
+    <string name="friendsetting_dialog_confirm">确定</string>
+    <string name="friendsetting_dialog_cancel">取消</string>
+    <string name="friendsetting_clear_both_success">已清空双方聊天记录</string>
+
+    <!-- 申请加入群聊模块相关字符串 -->
+    <string name="group_join_invalid_id">群号无效</string>
+    <string name="group_join_load_failed">加载群资料失败，请检查网络</string>
+    <string name="group_join_get_info_failed">获取群信息失败</string>
+    <string name="group_join_unnamed">未命名群聊</string>
+    <string name="group_join_no_notice">暂无公告</string>
+    <string name="group_join_member_count_format">成员数: %1$d 人</string>
+    <string name="group_join_btn_apply">提交加群申请</string>
+    <string name="group_join_btn_direct">直接加入群聊</string>
+    <string name="group_join_btn_already_in">您已在群中</string>
+    <string name="group_join_btn_reviewing">申请审核中</string>
+    <string name="group_join_input_code_tip">请输入进群邀请码</string>
+    <string name="group_join_input_reason_tip">本群需要验证，请填写加入理由</string>
+    <string name="group_join_network_error">网络请求失败</string>
+    <string name="group_join_action_completed">操作完成</string>
+
+    <!-- 群资料主界面模块相关字符串 -->
+    <string name="group_profile_qrcode_title">群组：%1$s</string>
+    <string name="group_profile_network_error">网络异常</string>
+    <string name="group_profile_default_name">群聊</string>
+    <string name="group_profile_default_notice">暂无公告</string>
+    <string name="group_profile_unknown_member">未知成员</string>
+    <string name="group_profile_member_count_format">群成员 (%1$d)</string>
+    <string name="group_profile_action_disband">解散群聊</string>
+    <string name="group_profile_action_exit">退出群聊</string>
+    <string name="group_profile_dialog_title">提示</string>
+    <string name="group_profile_remove_member_confirm">确定要将成员【%1$s】移出本群吗？</string>
+    <string name="group_profile_btn_confirm_remove">确定移出</string>
+    <string name="group_profile_dialog_cancel">取消</string>
+    <string name="group_profile_member_removed">已移出该成员</string>
+    <string name="group_profile_exit_dialog_title">退出群聊</string>
+    <string name="group_profile_exit_dialog_msg">确定要退出该群聊吗？退出后将删除所有该群的聊天记录且不可恢复。</string>
+    <string name="group_profile_btn_confirm_exit">确定退出</string>
+    <string name="group_profile_exit_failed">退出失败，请检查网络</string>
+    <string name="group_profile_exit_success">已退出群聊</string>
+    <string name="group_profile_disband_dialog_title">解散群聊</string>
+    <string name="group_profile_disband_dialog_msg">确定要解散该群聊吗？解散后将删除所有群成员及群聊资料，且不可恢复。</string>
+    <string name="group_profile_btn_confirm_disband">确定解散</string>
+    <string name="group_profile_disband_failed_net">解散失败，请检查网络</string>
+    <string name="group_profile_disband_failed">解散失败</string>
+    <string name="group_profile_disband_success">群聊已解散</string>
+    <string name="group_profile_member_add">添加</string>
+    <string name="group_profile_member_delete">删除</string>
+    <string name="group_profile_member_done">完成</string>
+    <string name="group_profile_role_owner">群主</string>
+
+    <!-- 邀请好友进群模块相关字符串 -->
+    <string name="invite_member_select_at_least_one">请选择至少一位好友</string>
+    <string name="invite_member_network_error">网络连接失败</string>
+    <string name="invite_member_success">邀请成功</string>
+    <string name="invite_member_failed">邀请失败</string>
+    <string name="invite_member_btn_confirm_format">确定(%1$d)</string>
+
+    <!-- 登录模块相关字符串 -->
+    <string name="login_tip_fill_complete">请完整填写用户名和密码</string>
+    <string name="login_tip_auto_agree_agreement">已为您自动同意隐私协议</string>
+    <string name="login_loading_message">正在安全登录...</string>
+    <string name="login_error_network_failed">网络请求失败，请检查网络后再试</string>
+    <string name="login_success_entering">登录成功！正在进入安全系统...</string>
+    <string name="login_error_credentials_wrong">登录失败，用户名或密码错误</string>
+    <string name="login_error_parse_exception">数据解析异常，请稍后再试</string>
+
+
+</resources>

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>抖音 - 记录美好生活</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* --- 顶部“关注/推荐”导航 --- */
+        .top-nav {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            padding-top: env(safe-area-inset-top, 20px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 100%);
+        }
+
+        .nav-item {
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 17px;
+            font-weight: 500;
+            margin: 0 14px;
+            text-decoration: none;
+            position: relative;
+        }
+
+        .nav-item.active {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 22px;
+            height: 3px;
+            background-color: #fff;
+            border-radius: 2px;
+        }
+
+        .top-search {
+            position: absolute;
+            right: 16px;
+            top: calc(50% + env(safe-area-inset-top, 20px) / 2 - 12px);
+        }
+
+        .top-search svg {
+            width: 24px;
+            height: 24px;
+            fill: #fff;
+            opacity: 0.9;
+        }
+
+        /* --- 全屏视频容器 --- */
+        .video-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 纯黑背景，模拟完全没有加载出视频画面的状态 */
+        .video-placeholder {
+            width: 100%;
+            height: 100%;
+            background-color: #0d0d0d;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- 核心：抖音专属双色加载动画（菊花转圈） --- */
+        .dy-loading-box {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.3s ease;
+            z-index: 50;
+        }
+
+        /* 抖音加载动画由两部分交替组成 */
+        .dy-loading-circle {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            mix-blend-mode: screen; /* 融合图层效果 */
+        }
+
+        .circle-cyan {
+            background-color: #24f6f0;
+            animation: moveCyan 1.2s infinite ease-in-out;
+        }
+
+        .circle-magenta {
+            background-color: #fe2c55;
+            animation: moveMagenta 1.2s infinite ease-in-out;
+        }
+
+        /* --- 右侧互动工具栏 --- */
+        .right-sidebar {
+            position: absolute;
+            right: 12px;
+            bottom: 110px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+            z-index: 5;
+        }
+
+        .avatar-box {
+            position: relative;
+            margin-bottom: 6px;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            background: #222; /* 没网时头像也是黑的 */
+        }
+
+        .follow-plus {
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 18px;
+            height: 18px;
+            background-color: #fe2c55;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .follow-plus svg {
+            width: 10px;
+            height: 10px;
+            fill: #fff;
+        }
+
+        .action-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 500;
+            gap: 4px;
+        }
+
+        .action-item svg {
+            width: 36px;
+            height: 36px;
+            fill: #fff;
+        }
+
+        .music-disc {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #111, #222);
+            border: 8px solid #111;
+            margin-top: 6px;
+        }
+
+        /* --- 左下角文本（没网时通常不显示或显示旧缓存，这里保留结构但可做暗化） --- */
+        .left-info {
+            position: absolute;
+            left: 16px;
+            bottom: 110px;
+            right: 80px;
+            color: #fff;
+            z-index: 5;
+            opacity: 0.4; /* 降低透明度模拟未激活/未读取成功状态 */
+        }
+
+        .author-username {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .video-desc {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        /* --- 底部经典导航栏 --- */
+        .bottom-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 52px;
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+            background-color: #000;
+            border-top: 0.5px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            z-index: 10;
+        }
+
+        .tab-item {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 15px;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .tab-item.active {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .add-btn-wrapper {
+            position: relative;
+            width: 46px;
+            height: 28px;
+            background-color: #fff;
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            align-self: center;
+        }
+
+        .add-btn-wrapper::before {
+            content: '';
+            position: absolute;
+            left: -3px;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #00f2fe;
+            border-radius: 7px;
+            z-index: -1;
+        }
+
+        .add-btn-wrapper::after {
+            content: '';
+            position: absolute;
+            right: -3px;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #fe2c55;
+            border-radius: 7px;
+            z-index: -2;
+        }
+
+        .add-btn-wrapper svg {
+            width: 16px;
+            height: 16px;
+            fill: #000;
+        }
+
+        /* --- 黑色轻量级断网提示 Tost --- */
+        .network-error-toast {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: #fff;
+            padding: 20px 24px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            z-index: 1000;
+            width: 75%;
+            max-width: 270px;
+            text-align: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.25s ease;
+        }
+
+        .network-error-toast.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            pointer-events: auto;
+        }
+
+        .network-error-toast svg {
+            width: 28px;
+            height: 28px;
+            fill: #fff;
+        }
+
+        .toast-title {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .toast-desc {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.5;
+        }
+
+        .retry-action-btn {
+            margin-top: 6px;
+            background: #fe2c55;
+            color: #fff;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 8px 0;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        /* --- 抖音标志性 Loading 左右交替互换置顶动画 --- */
+        @keyframes moveCyan {
+            0%, 100% { transform: translateX(-12px); z-index: 2; }
+            50% { transform: translateX(12px); z-index: 1; }
+        }
+
+        @keyframes moveMagenta {
+            0%, 100% { transform: translateX(12px); z-index: 1; }
+            50% { transform: translateX(-12px); z-index: 2; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="top-nav">
+    <a href="#" class="nav-item">关注</a>
+    <a href="#" class="nav-item active">推荐</a>
+    <div class="top-search">
+        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+    </div>
+</div>
+
+<div class="video-container" onclick="triggerLoading()">
+    <div class="video-placeholder"></div>
+
+    <div class="dy-loading-box" id="loadingBox">
+        <div class="dy-loading-circle circle-cyan"></div>
+        <div class="dy-loading-circle circle-magenta"></div>
+    </div>
+
+    <div class="left-info">
+        <div class="author-username">@--</div>
+        <div class="video-desc">加载失败，请检查网络设置</div>
+    </div>
+
+    <div class="right-sidebar">
+        <div class="avatar-box">
+            <div class="avatar"></div>
+            <div class="follow-plus">
+                <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+            </div>
+        </div>
+        <div class="action-item">
+            <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            <span>- -</span>
+        </div>
+        <div class="action-item">
+            <svg viewBox="0 0 24 24"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18zM18 14H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+            <span>- -</span>
+        </div>
+        <div class="action-item">
+            <svg viewBox="0 0 24 24"><path d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"/></svg>
+            <span>- -</span>
+        </div>
+        <div class="music-disc"></div>
+    </div>
+</div>
+
+<div class="bottom-bar">
+    <div class="tab-item active">首页</div>
+    <div class="tab-item">朋友</div>
+    <div class="tab-item">
+        <div class="add-btn-wrapper">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        </div>
+    </div>
+    <div class="tab-item">消息</div>
+    <div class="tab-item">我</div>
+</div>
+
+<div class="network-error-toast" id="networkToast">
+    <svg viewBox="0 0 24 24">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+    </svg>
+    <div class="toast-title">网络未连接</div>
+    <div class="toast-desc">当前网络无法连接，请检查网络设置或稍后再试。</div>
+    <button class="retry-action-btn" onclick="handleRetry(event)">重试</button>
+</div>
+
+<script>
+    const loadingBox = document.getElementById('loadingBox');
+    const networkToast = document.getElementById('networkToast');
+
+    // 动画逻辑：进入页面先转圈 2.2 秒，随后判定超时失败，隐藏动画并弹出断网框
+    function startLoadingSequence() {
+        // 确保初始化状态
+        loadingBox.style.opacity = '1';
+        networkToast.classList.remove('show');
+
+        setTimeout(() => {
+            // 1. 隐藏转圈动画
+            loadingBox.style.opacity = '0';
+            // 2. 弹出断网提示
+            setTimeout(() => {
+                networkToast.classList.add('show');
+            }, 200);
+        }, 2200); // 模拟2.2秒的读取超时
+    }
+
+    // 首次进入自动触发一次
+    window.addEventListener('DOMContentLoaded', startLoadingSequence);
+
+    // 点击全屏任意空白处重新模拟一次读取过程
+    function triggerLoading() {
+        if (!networkToast.classList.contains('show')) return;
+        networkToast.classList.remove('show');
+        setTimeout(startLoadingSequence, 300);
+    }
+
+    // 点击重试按钮
+    function handleRetry(e) {
+        e.stopPropagation(); // 阻止穿透
+        networkToast.classList.remove('show');
+        setTimeout(startLoadingSequence, 200);
+    }
+</script>
+</body>
+</html>

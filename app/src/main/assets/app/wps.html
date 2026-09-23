@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>富文本编辑器手机端</title>
+    <style>
+        :root {
+            --primary-color: #2160f3;
+            --bg-color: #f7f8fa;
+            --border-color: #e5e5e5;
+            --text-primary: #333333;
+            --text-secondary: #888888;
+        }
+
+        /* 修复点 1：将高度严格限制为 100%，防止在 WebView 中坍塌为 0 */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #ffffff;
+            overflow: hidden;
+        }
+
+        /* 修复点 2：去掉 100vh，完全基于绝对的百分比和绝对定位兜底 */
+        .phone-mockup {
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* 顶部导航栏 */
+        .top-nav {
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+            z-index: 10;
+            box-sizing: border-bottom;
+            margin-top:30px
+        }
+
+        .nav-left, .nav-center, .nav-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-center {
+            gap: 8px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .icon-btn:active {
+            background-color: var(--bg-color);
+        }
+
+        .icon-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .save-btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 6px 18px;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .save-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* 弹出菜单 */
+        .dropdown-menu {
+            position: absolute;
+            top: 65px;
+            right: 80px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            padding: 8px 0;
+            display: none;
+            flex-direction: column;
+            z-index: 20;
+            min-width: 120px;
+            border: 1px solid var(--border-color);
+        }
+
+        .dropdown-menu.show {
+            display: flex;
+        }
+
+        .menu-item {
+            padding: 12px 20px;
+            font-size: 14px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .menu-item:active {
+            background-color: var(--bg-color);
+        }
+
+        /* 编辑器主体 */
+        .editor-container {
+            flex: 1;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            background-color: #ffffff;
+            overflow: hidden; /* 保证内部可以滚动，外部不溢出 */
+        }
+
+        /* 修复点 3：显式声明编辑器的基础高度，防止被 flex-grow 压成 0 像素 */
+        #editor {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            padding: 20px 24px;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-primary);
+            outline: none;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch; /* 顺滑滚动 */
+        }
+
+        #editor[placeholder]:empty:before {
+            content: attr(placeholder);
+            color: #ccc;
+            pointer-events: none;
+            display: block;
+        }
+
+        /* 字数统计 */
+        .word-count-wrapper {
+            position: absolute;
+            bottom: 16px;
+            left: 24px;
+            pointer-events: none; /* 防止遮挡输入法或点击 */
+        }
+
+        .word-count {
+            font-size: 12px;
+            color: var(--text-secondary);
+            background-color: var(--bg-color);
+            padding: 6px 12px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        /* 底部导航栏 */
+        .bottom-nav {
+            height: 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: white;
+            border-top: 1px solid var(--border-color);
+            padding: 0 10px;
+            padding-bottom: env(safe-area-inset-bottom);
+            box-sizing: content-box;
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            color: var(--text-primary);
+            font-size: 10px;
+            gap: 4px;
+            cursor: pointer;
+        }
+
+        .bottom-nav-item svg {
+            width: 22px;
+            height: 22px;
+            stroke-width: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+<div class="phone-mockup">
+    <div class="top-nav">
+        <div class="nav-left">
+            <button class="icon-btn" onclick="goBack()" aria-label="返回">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg>
+            </button>
+        </div>
+
+        <div class="nav-center">
+            <button class="icon-btn" onclick="execCmd('undo')" aria-label="撤销">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a5 5 0 0 1 5 5v2M3 10l4 4M3 10l4-4"/></svg>
+            </button>
+            <button class="icon-btn" onclick="execCmd('redo')" aria-label="重做">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 10H11a5 5 0 0 0-5 5v2M21 10l-4 4M21 10l-4-4"/></svg>
+            </button>
+            <button class="icon-btn" onclick="shareDoc()" aria-label="分享">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v13"/></svg>
+            </button>
+            <button class="icon-btn" onclick="toggleMenu()" aria-label="菜单">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+        </div>
+
+        <div class="nav-right">
+            <button class="save-btn" onclick="saveDocument()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                保存
+            </button>
+        </div>
+    </div>
+
+    <div id="dropdownMenu" class="dropdown-menu">
+        <div class="menu-item" onclick="execCmd('bold')"><b>加粗文本</b></div>
+        <div class="menu-item" onclick="execCmd('italic')"><i>斜体文本</i></div>
+        <div class="menu-item" onclick="execCmd('underline')"><u>添加下划线</u></div>
+        <div style="height: 1px; background: var(--border-color); margin: 4px 0;"></div>
+        <div class="menu-item" style="color: #ff4d4f;" onclick="clearEditor()">清空内容</div>
+    </div>
+
+    <div class="editor-container">
+        <div id="editor" contenteditable="true" placeholder="在此输入内容..." oninput="updateWordCount()"></div>
+
+        <div class="word-count-wrapper">
+            <div class="word-count">全文: <span id="word-count-num">0</span></div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="bottom-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            <span>问问 AI</span>
+        </div>
+        <div class="bottom-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><path d="M8 3v18M16 3v18"/></svg>
+            <span>适应屏幕</span>
+        </div>
+        <div class="bottom-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>
+            <span>格式</span>
+        </div>
+        <div class="bottom-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h10M4 18h14"/></svg>
+            <span>段落</span>
+        </div>
+        <div class="bottom-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            <span>工具</span>
+        </div>
+        <div class="bottom-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16v12H4z"/><path d="M8 10h.01M12 10h.01M16 10h.01M12 14h.01"/></svg>
+            <span>键盘</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    const editor = document.getElementById('editor');
+    const wordCountDisplay = document.getElementById('word-count-num');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+
+    // 富文本命令执行
+    function execCmd(command) {
+        try {
+            document.execCommand(command, false, null);
+            editor.focus();
+            updateWordCount();
+        } catch(e) { console.error(e); }
+        if(dropdownMenu.classList.contains('show')){
+            dropdownMenu.classList.remove('show');
+        }
+    }
+
+    // 实时更新字数
+    function updateWordCount() {
+        const text = editor.textContent || editor.innerText || "";
+        const count = text.replace(/\s+/g, '').length;
+        wordCountDisplay.textContent = count;
+    }
+
+    // 控制菜单显示/隐藏
+    function toggleMenu() {
+        dropdownMenu.classList.toggle('show');
+    }
+
+    // 点击其他区域关闭菜单
+    document.addEventListener('click', function(event) {
+        const isClickInsideMenu = dropdownMenu.contains(event.target);
+        const isClickOnMenuButton = event.target.closest('.icon-btn') && event.target.closest('.icon-btn').getAttribute('aria-label') === '菜单';
+
+        if (!isClickInsideMenu && !isClickOnMenuButton && dropdownMenu.classList.contains('show')) {
+            dropdownMenu.classList.remove('show');
+        }
+    });
+
+    // 清空编辑器
+    function clearEditor() {
+        editor.innerHTML = '';
+        updateWordCount();
+        dropdownMenu.classList.remove('show');
+        editor.focus();
+    }
+
+    // 修复点 5：增加 try-catch 保护，防止 APP 内部未注入 AppFinish 导致 JS 崩掉页面卡死
+    function goBack() {
+        try {
+            if (typeof AppFinish === 'function') {
+                AppFinish();
+            } else if (window.android && typeof window.android.AppFinish === 'function') {
+                window.android.AppFinish();
+            } else {
+                console.log('未检测到注入的原生方法');
+                alert('返回事件被触发');
+            }
+        } catch (e) {
+            console.error("返回调用失败", e);
+        }
+    }
+
+    // 分享与保存模拟
+    function shareDoc() {
+        alert('触发分享面板功能');
+    }
+
+    function saveDocument() {
+        const htmlContent = editor.innerHTML;
+        console.log('保存的内容:', htmlContent);
+        alert('文档已保存成功！');
+    }
+
+    // 初始化焦点
+    window.onload = () => {
+        try {
+            editor.focus();
+        } catch(e) {}
+    }
+</script>
+
+</body>
+</html>

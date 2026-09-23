@@ -1,0 +1,1062 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingTop="24dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="60dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="设置"
+                android:textColor="#111111"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="设置"
+                    android:textColor="#111111"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <!-- ✨ 分离式设计：文字独立显示在开关左侧 -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_online_status_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:text="在线"
+                        android:textColor="#4CAF50"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <!-- 纯净的开关，关闭内部文字 -->
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/switch_online_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:showText="false" />
+                </LinearLayout>
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <TextView
+            style="@style/SettingsGroupTitle"
+            android:text="账户信息" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_profile"
+            style="@style/SettingsItemRow">
+
+            <View
+                android:id="@+id/icon_profile_bg"
+                style="@style/SettingsIconBg"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/user_thumb"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_gravity="center"
+                app:riv_corner_radius="42dp"
+                tools:ignore="MissingConstraints" />
+
+            <LinearLayout
+                style="@style/SettingsItemTextContainer"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/arrow_profile"
+                app:layout_constraintStart_toEndOf="@id/icon_profile_bg"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/tv_nickname"
+                    style="@style/SettingsItemTitle"
+                    tools:text="可爱喵喵" />
+
+                <TextView
+                    android:id="@+id/tv_userid"
+                    android:text="#999999"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+                <!-- 会员徽章与描述并排展示 -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <!-- VIP 用户专属徽章，默认 GONE -->
+                    <TextView
+                        android:id="@+id/tv_profile_vip_badge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="6dp"
+                        android:background="@drawable/bg_vip_badge"
+                        android:includeFontPadding="false"
+                        android:text="VIP"
+                        android:textColor="#FFFFFF"
+                        android:textSize="9sp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+                    <TextView
+                        android:id="@+id/tv_vip"
+                        style="@style/SettingsItemDesc" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/arrow_profile"
+                style="@style/SettingsRightArrow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_input_box"
+            android:padding="10dp"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="加密流量包"
+                        android:textColor="#111111"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/strpoint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:textColor="#999999"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <ProgressBar
+                    android:id="@+id/PointProgressBar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:max="100"
+                    android:progressDrawable="@drawable/bg_flow_progress" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_bind"
+            style="@style/SettingsItemRow">
+
+            <View
+                android:id="@+id/icon_bind_bg"
+                style="@style/SettingsIconBg"
+                android:background="@drawable/setting_bangding"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                style="@style/SettingsItemTextContainer"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/arrow_bind"
+                app:layout_constraintStart_toEndOf="@id/icon_bind_bg"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/SettingsItemTitle"
+                        android:text="公众号绑定" />
+
+                </LinearLayout>
+
+                <TextView
+                    style="@style/SettingsItemDesc"
+                    android:text="远程清除记录、订阅VIP资格" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/arrow_bind"
+                style="@style/SettingsRightArrow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- 1. 选择节点 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_server"
+            style="@style/SettingsItemRow">
+
+            <View
+                android:id="@+id/icon_server_bg"
+                style="@style/SettingsIconBg"
+                android:background="@drawable/setting_jiedian"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_vip_badge"
+                android:includeFontPadding="false"
+                android:text="VIP"
+                android:textColor="#FFFFFF"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/icon_server_bg"
+                app:layout_constraintEnd_toEndOf="@id/icon_server_bg"
+                app:layout_constraintTop_toTopOf="@id/icon_server_bg" />
+
+            <LinearLayout
+                style="@style/SettingsItemTextContainer"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/arrow_server"
+                app:layout_constraintStart_toEndOf="@id/icon_server_bg"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    style="@style/SettingsItemTitle"
+                    android:text="选择节点" />
+
+                <TextView
+                    style="@style/SettingsItemDesc"
+                    android:text="自建聊天服务器，隐私更有保障" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/arrow_server"
+                style="@style/SettingsRightArrow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            style="@style/SettingsGroupTitle"
+            android:text="安全与隐私" />
+
+        <!-- 2. 聊天记录自动焚毁 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_burn"
+            style="@style/SettingsItemRow">
+
+            <View
+                android:id="@+id/icon_burn_bg"
+                style="@style/SettingsIconBg"
+                android:background="@drawable/setting_dingshi"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_vip_badge"
+                android:includeFontPadding="false"
+                android:text="VIP"
+                android:textColor="#FFFFFF"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/icon_burn_bg"
+                app:layout_constraintEnd_toEndOf="@id/icon_burn_bg"
+                app:layout_constraintTop_toTopOf="@id/icon_burn_bg" />
+
+            <LinearLayout
+                style="@style/SettingsItemTextContainer"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/arrow_burn"
+                app:layout_constraintStart_toEndOf="@id/icon_burn_bg"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/SettingsItemTitle"
+                        android:text="聊天定时清空" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_current_burn"
+                    style="@style/SettingsItemDesc"
+                    android:text="定时删除聊天记录，保护隐私" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/arrow_burn"
+                style="@style/SettingsRightArrow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- 3. 即时焚毁策略 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_strategy"
+            style="@style/SettingsItemRow">
+
+            <View
+                android:id="@+id/icon_strategy_bg"
+                style="@style/SettingsIconBg"
+                android:background="@drawable/setting_fenhui"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_vip_badge"
+                android:includeFontPadding="false"
+                android:text="VIP"
+                android:textColor="#FFFFFF"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/icon_strategy_bg"
+                app:layout_constraintEnd_toEndOf="@id/icon_strategy_bg"
+                app:layout_constraintTop_toTopOf="@id/icon_strategy_bg" />
+
+            <LinearLayout
+                style="@style/SettingsItemTextContainer"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/arrow_strategy"
+                app:layout_constraintStart_toEndOf="@id/icon_strategy_bg"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    style="@style/SettingsItemTitle"
+                    android:text="即时焚毁策略" />
+
+                <TextView
+                    android:id="@+id/tv_current_strategy"
+                    style="@style/SettingsItemDesc"
+                    android:text="自动焚毁记录，保证不留痕迹" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/arrow_strategy"
+                style="@style/SettingsRightArrow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_security_verify"
+            style="@style/SettingsItemRow">
+
+            <View
+                android:id="@+id/icon_security_bg"
+                style="@style/SettingsIconBg"
+                android:background="@drawable/setting_anquanyanzheng"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                style="@style/SettingsItemTextContainer"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/arrow_security"
+                app:layout_constraintStart_toEndOf="@id/icon_security_bg"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    style="@style/SettingsItemTitle"
+                    android:text="安全验证" />
+
+                <TextView
+                    style="@style/SettingsItemDesc"
+                    android:text="配置安全登录密码与独立加密传输锁" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/arrow_security"
+                style="@style/SettingsRightArrow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_virtual_verify"
+            style="@style/SettingsItemRow">
+
+            <View
+                android:id="@+id/icon_virtual_bg"
+                style="@style/SettingsIconBg"
+                android:background="@drawable/setting_xuniyanzheng"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                style="@style/SettingsItemTextContainer"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/arrow_virtual"
+                app:layout_constraintStart_toEndOf="@id/icon_virtual_bg"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/SettingsItemTitle"
+                        android:text="虚拟验证" />
+
+                </LinearLayout>
+
+                <TextView
+                    style="@style/SettingsItemDesc"
+                    android:text="输入虚拟密码可删除记录，隐藏好友" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/arrow_virtual"
+                style="@style/SettingsRightArrow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_password"
+            style="@style/SettingsItemRow">
+
+            <View
+                android:id="@+id/icon_password_bg"
+                style="@style/SettingsIconBg"
+                android:background="@drawable/setting_password"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                style="@style/SettingsItemTextContainer"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/arrow_password"
+                app:layout_constraintStart_toEndOf="@id/icon_password_bg"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/SettingsItemTitle"
+                        android:text="登录密码" />
+
+                </LinearLayout>
+
+                <TextView
+                    style="@style/SettingsItemDesc"
+                    android:text="修改登录密码" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/arrow_password"
+                style="@style/SettingsRightArrow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            style="@style/SettingsGroupTitle"
+            android:text="交互与消息提醒" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_remind"
+            style="@style/SettingsItemRow">
+
+            <View
+                android:id="@+id/icon_remind_bg"
+                style="@style/SettingsIconBg"
+                android:background="@drawable/setting_tongzhi"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                style="@style/SettingsItemTextContainer"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/arrow_remind"
+                app:layout_constraintStart_toEndOf="@id/icon_remind_bg"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    style="@style/SettingsItemTitle"
+                    android:text="消息提醒设置" />
+
+                <TextView
+                    android:id="@+id/tv_current_remind"
+                    style="@style/SettingsItemDesc"
+                    android:text="提醒方式，提醒声音" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/arrow_remind"
+                style="@style/SettingsRightArrow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_lock_mechanism"
+            style="@style/SettingsItemRow">
+
+            <View
+                android:id="@+id/icon_lock_m_bg"
+                style="@style/SettingsIconBg"
+                android:background="@drawable/setting_suoding"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                style="@style/SettingsItemTextContainer"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/arrow_lock_m"
+                app:layout_constraintStart_toEndOf="@id/icon_lock_m_bg"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    style="@style/SettingsItemTitle"
+                    android:text="聊天与锁定机制" />
+
+                <TextView
+                    android:id="@+id/tv_current_lock_m"
+                    style="@style/SettingsItemDesc"
+                    android:text="输入隐藏、回车发送、锁定方式" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/arrow_lock_m"
+                style="@style/SettingsRightArrow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- 4. 安全验证模式 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_auth_mode"
+            style="@style/SettingsItemRow">
+
+            <View
+                android:id="@+id/icon_auth_bg"
+                style="@style/SettingsIconBg"
+                android:background="@drawable/setting_zhiwen"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_vip_badge"
+                android:includeFontPadding="false"
+                android:text="VIP"
+                android:textColor="#FFFFFF"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/icon_auth_bg"
+                app:layout_constraintEnd_toEndOf="@id/icon_auth_bg"
+                app:layout_constraintTop_toTopOf="@id/icon_auth_bg" />
+
+            <LinearLayout
+                style="@style/SettingsItemTextContainer"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/arrow_auth"
+                app:layout_constraintStart_toEndOf="@id/icon_auth_bg"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/SettingsItemTitle"
+                        android:text="安全验证模式" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_current_auth"
+                    style="@style/SettingsItemDesc"
+                    android:text="密码验证或指纹验证" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/arrow_auth"
+                style="@style/SettingsRightArrow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_click_m"
+            style="@style/SettingsItemRow">
+
+            <View
+                android:id="@+id/icon_click_m_bg"
+                style="@style/SettingsIconBg"
+                android:background="@drawable/setting_anjian"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                style="@style/SettingsItemTextContainer"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/arrow_click_m"
+                app:layout_constraintStart_toEndOf="@id/icon_click_m_bg"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    style="@style/SettingsItemTitle"
+                    android:text="点击M键模式" />
+
+                <TextView
+                    android:id="@+id/tv_current_click_m"
+                    style="@style/SettingsItemDesc"
+                    android:text="进入通讯录或最近联系好友" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/arrow_click_m"
+                style="@style/SettingsRightArrow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- 5. 锁屏后操作 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_lock_action"
+            style="@style/SettingsItemRow">
+
+            <View
+                android:id="@+id/icon_lock_action_bg"
+                style="@style/SettingsIconBg"
+                android:background="@drawable/setting_suoping"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_vip_badge"
+                android:includeFontPadding="false"
+                android:text="VIP"
+                android:textColor="#FFFFFF"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/icon_lock_action_bg"
+                app:layout_constraintEnd_toEndOf="@id/icon_lock_action_bg"
+                app:layout_constraintTop_toTopOf="@id/icon_lock_action_bg" />
+
+            <LinearLayout
+                style="@style/SettingsItemTextContainer"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/arrow_lock_action"
+                app:layout_constraintStart_toEndOf="@id/icon_lock_action_bg"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/SettingsItemTitle"
+                        android:text="锁屏后操作" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_current_lock_action"
+                    style="@style/SettingsItemDesc"
+                    android:text="自动删除聊天记录、返回桌面" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/arrow_lock_action"
+                style="@style/SettingsRightArrow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            style="@style/SettingsGroupTitle"
+            android:text="个性化" />
+
+        <!-- 6. 自定义应用图标 (外层 ConstraintLayout + VIP 角标) -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <View
+                android:id="@+id/icon_custom_bg"
+                style="@style/SettingsIconBg"
+                android:background="@drawable/setting_zidingyi"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_vip_badge"
+                android:includeFontPadding="false"
+                android:text="VIP"
+                android:textColor="#FFFFFF"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/icon_custom_bg"
+                app:layout_constraintEnd_toEndOf="@id/icon_custom_bg"
+                app:layout_constraintTop_toTopOf="@id/icon_custom_bg" />
+
+            <LinearLayout
+                style="@style/SettingsItemTextContainer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/icon_custom_bg"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    style="@style/SettingsItemTitle"
+                    android:text="自定义应用图标" />
+
+                <TextView
+                    style="@style/SettingsItemDesc"
+                    android:text="可选择替换桌面的应用图标与外观名称" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <GridLayout
+                android:id="@+id/app_icon_grid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:alignmentMode="alignBounds"
+                android:columnCount="4"
+                android:rowOrderPreserved="false" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:lineSpacingMultiplier="1.2"
+                android:text="⚠️ 注意：更换图标后，APP将自动退出，喵喵图标亦会更换成相应的应用图标，进入喵喵后首页也会替换成模拟页面。"
+                android:textColor="#E54D42"
+                android:textSize="12sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/SettingsItemTitle"
+                        android:layout_weight="1"
+                        android:text="主页按钮透明度" />
+
+                    <TextView
+                        android:id="@+id/tv_alpha_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="#999999"
+                        android:textSize="14sp"
+                        tools:text="5" />
+                </LinearLayout>
+
+                <SeekBar
+                    android:id="@+id/sb_alpha_progress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:max="9" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            style="@style/SettingsGroupTitle"
+            android:text="其他" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_update"
+            style="@style/SettingsItemRow">
+
+            <View
+                android:id="@+id/icon_update_bg"
+                style="@style/SettingsIconBg"
+                android:background="@drawable/setting_shengji"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                style="@style/SettingsItemTextContainer"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/arrow_update"
+                app:layout_constraintStart_toEndOf="@id/icon_update_bg"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    style="@style/SettingsItemTitle"
+                    android:text="喵喵更新" />
+
+                <TextView
+                    android:id="@+id/tv_version"
+                    style="@style/SettingsItemDesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/arrow_update"
+                style="@style/SettingsRightArrow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_clean_cache"
+            style="@style/SettingsItemRow">
+
+            <View
+                android:id="@+id/icon_clean_bg"
+                style="@style/SettingsIconBg"
+                android:background="@drawable/setting_qingli"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                style="@style/SettingsItemTextContainer"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/arrow_clean"
+                app:layout_constraintStart_toEndOf="@id/icon_clean_bg"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    style="@style/SettingsItemTitle"
+                    android:text="清除临时缓存文件" />
+
+                <TextView
+                    style="@style/SettingsItemDesc"
+                    android:text="清理后将删除收到视频、语音和图片" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/arrow_clean"
+                style="@style/SettingsRightArrow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_backup_chat"
+            style="@style/SettingsItemRow"
+            android:visibility="gone">
+
+            <View
+                android:id="@+id/icon_chat"
+                style="@style/SettingsIconBg"
+                android:background="@drawable/backup"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                style="@style/SettingsItemTextContainer"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/arrow_chat"
+                app:layout_constraintStart_toEndOf="@id/icon_chat"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    style="@style/SettingsItemTitle"
+                    android:text="备份和恢复聊天记录" />
+
+                <TextView
+                    style="@style/SettingsItemDesc"
+                    android:text="将现在的聊天记录备份到设备" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/arrow_chat"
+                style="@style/SettingsRightArrow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_backup_setting"
+            style="@style/SettingsItemRow">
+
+            <View
+                android:id="@+id/icon_backupsetting"
+                style="@style/SettingsIconBg"
+                android:background="@drawable/backup"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                style="@style/SettingsItemTextContainer"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/arrow_backupsetting"
+                app:layout_constraintStart_toEndOf="@id/icon_backupsetting"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    style="@style/SettingsItemTitle"
+                    android:text="备份和恢复设置" />
+
+                <TextView
+                    style="@style/SettingsItemDesc"
+                    android:text="将现在的设置备份到云端" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/arrow_backupsetting"
+                style="@style/SettingsRightArrow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_exit"
+            style="@style/SettingsItemRow">
+
+            <View
+                android:id="@+id/icon_exit_bg"
+                style="@style/SettingsIconBg"
+                android:background="@drawable/setting_tuichu"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                style="@style/SettingsItemTextContainer"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/arrow_exit"
+                app:layout_constraintStart_toEndOf="@id/icon_exit_bg"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    style="@style/SettingsItemTitle"
+                    android:text="退出喵喵" />
+
+                <TextView
+                    style="@style/SettingsItemDesc"
+                    android:text="退出后您将无法接收到新消息。" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/arrow_exit"
+                style="@style/SettingsRightArrow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+</ScrollView>

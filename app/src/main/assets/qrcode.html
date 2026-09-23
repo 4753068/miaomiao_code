@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>加好友二维码</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* 基础样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* 页面外层容器，限制最大宽度 */
+        .app-container {
+            width: 100%;
+            max-width: 380px;
+            background-color: #ffffff;
+            border-radius: 30px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- 主收款/加好友卡片 --- */
+        .qr-card {
+            background: linear-gradient(180deg, #e1f7ec 0%, #edf9f3 100%);
+            border-radius: 28px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 卡片顶部的装饰弧线效果 */
+        .qr-card::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -10%;
+            width: 120%;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* 用户信息区域 */
+        .user-info {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            gap: 14px;
+            margin-bottom: 24px;
+            z-index: 1;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: #ffd8d8;
+            border: 2px solid #fff;
+            object-fit: cover; /* 保证传入的自定义头像图片不Bytes变形 */
+        }
+
+        .user-details {
+            flex: 1;
+        }
+
+        /* 图二：粗体文字显示 GET['nickname'] */
+        .username {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a251f;
+            margin-bottom: 2px;
+        }
+
+        .user-id-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* 图二：下面文字显示 GET['mid'] */
+        .user-id {
+            font-size: 14px;
+            color: #5c6861;
+            font-weight: 600;
+        }
+
+        .copy-icon {
+            cursor: pointer;
+            color: #5c6861;
+            display: inline-flex;
+        }
+
+        /* 二维码区域 */
+        .qr-container {
+            background-color: #ffffff;
+            padding: 16px;
+            border-radius: 24px;
+            border: 8px solid #10b981; /* 绿色边框 */
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            margin-bottom: 24px;
+            z-index: 1;
+        }
+
+        .qr-code {
+            width: 180px;
+            height: 180px;
+            display: block;
+        }
+
+        /* 二维码中心的钱包/用户小图标 */
+        .qr-center-logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 36px;
+            height: 36px;
+            background-color: #10b981;
+            border-radius: 50%;
+            border: 3px solid #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        /* 图一：底部文字说明区域 */
+        .instruction-info {
+            background-color: #ffffff;
+            width: 100%;
+            padding: 16px;
+            border-radius: 16px;
+            z-index: 1;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .instruction-text {
+            font-size: 13px;
+            color: #4a554f;
+            line-height: 1.6;
+            text-align: justify;
+        }
+        
+        .highlight-app {
+            color: #10b981;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+
+    <div class="qr-card">
+        <div class="user-info">
+            <img class="avatar" id="userAvatar" src="" alt="Avatar">
+            <div class="user-details">
+                <div class="username" id="userNickname">加载中...</div>
+                <div class="user-id-wrapper">
+                    <span class="user-id" id="userMid">加载中...</span>
+                    <span class="copy-icon" title="复制">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="qr-container">
+            <img class="qr-code" id="qrImage" src="" alt="QR Code">
+            <div class="qr-center-logo">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            </div>
+        </div>
+
+        <div class="instruction-info">
+            <div class="instruction-text">
+                用好友的“<span class="highlight-app">喵喵APP</span>”，进入好友列表点击右下角“+”图标，选择“扫码加好友”扫描上面的二维码即可成为好友。
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // 获取 URL 中的 GET 参数的通用函数
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    // 1. 读取并处理 's' 参数生成二维码
+    const qrData = getQueryParam('s');
+    const finalQrData = qrData ? encodeURIComponent(qrData) : encodeURIComponent('MiaoMiaoDefaultData');
+    document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${finalQrData}`;
+
+    // 2. 读取并处理 'image' 参数更改头像
+    const imageUrl = getQueryParam('image');
+    // 如果没有传 image，使用自带的 SVG 占位图或默认头像
+    document.getElementById('userAvatar').src = imageUrl ? imageUrl : 'https://api.dicebear.com/7.x/bottts/svg?seed=miaomiao';
+
+    // 3. 读取并处理 'nickname' 参数
+    const nickname = getQueryParam('nickname');
+    document.getElementById('userNickname').innerText = nickname ? nickname : '未命名好友';
+
+    // 4. 读取并处理 'mid' 参数
+    const mid = getQueryParam('mid');
+    document.getElementById('userMid').innerText = mid ? mid : 'ID: 000000';
+</script>
+
+</body>
+</html>

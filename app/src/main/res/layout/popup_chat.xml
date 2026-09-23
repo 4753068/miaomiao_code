@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="8dp"
+    app:cardMaxElevation="12dp"
+    app:cardUseCompatPadding="true"
+    app:cardPreventCornerOverlap="false"
+    app:cardBackgroundColor="@android:color/white"
+    app:strokeColor="#CCCCCC"
+    app:strokeWidth="1dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/top_beizhu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:layout_weight="1"
+            android:padding="15dp"
+            android:textSize="16sp"
+            android:text="备注昵称"></TextView>
+
+        <TextView
+            android:id="@+id/top_daochu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:layout_weight="1"
+            android:padding="15dp"
+            android:textSize="16sp"
+            android:visibility="gone"
+            android:text="备份聊天记录"></TextView>
+
+        <TextView
+            android:id="@+id/top_chazhao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:layout_weight="1"
+            android:padding="15dp"
+            android:textSize="16sp"
+            android:text="查找聊天记录"></TextView>
+
+        <TextView
+            android:id="@+id/top_delete_chat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:layout_weight="1"
+            android:padding="15dp"
+            android:textSize="16sp"
+            android:text="清空聊天记录"></TextView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <Switch
+                android:id="@+id/top_zanting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:textSize="16sp"
+                android:text="暂不联系"></Switch>
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <Switch
+                android:id="@+id/btnMiandarao"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:textSize="16sp"
+                android:text="免打扰"></Switch>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/top_tongbu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:textSize="16sp"
+            android:text="导出信息"></TextView>
+
+        <TextView
+            android:id="@+id/top_delete_friend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:textColor="#c00000"
+            android:layout_weight="1"
+            android:padding="15dp"
+            android:textSize="16sp"
+            android:text="删除好友"></TextView>
+
+        <TextView
+            android:id="@+id/top_setting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:layout_weight="1"
+            android:padding="15dp"
+            android:textSize="16sp"
+            android:text="设置"></TextView>
+
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

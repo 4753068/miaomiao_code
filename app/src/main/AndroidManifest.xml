@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+    <!-- 基础定位权限 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+
+    <!-- 后台定位与保活 -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
+    <application
+        android:name="com.qapp.midian.App"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@drawable/logo"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/MiDian"
+        tools:targetApi="31" >
+
+        <activity
+            android:name=".activity_main"
+            android:launchMode="singleTask"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity_friend"
+            android:launchMode="singleTask"
+            android:exported="true">
+
+            <!-- 1. 处理纯文本、链接（兼容浏览器、抖音等分享的链接） -->
+            <intent-filter android:label="分享给喵友">
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/*" />
+            </intent-filter>
+
+            <!-- 2. 处理图片分享 -->
+            <intent-filter android:label="分享给喵友">
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+
+            <!-- 3. 处理视频分享 -->
+            <intent-filter android:label="分享给喵友">
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="video/*" />
+            </intent-filter>
+
+            <!-- 4. 处理音频分享 -->
+            <intent-filter android:label="分享给喵友">
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="audio/*" />
+            </intent-filter>
+
+            <!-- 5. 可选：处理多文件/多图片分享 (如相册批量分享) -->
+            <intent-filter android:label="分享给喵友">
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+                <data android:mimeType="video/*" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity_web" />
+        <activity
+            android:name=".activity_chat"
+            android:launchMode="singleTask"
+            android:exported="false"
+            android:windowSoftInputMode="stateVisible|adjustResize"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".activity_media" />
+        <activity android:name=".activity_search_chat" />
+        <activity
+            android:name=".activity_qr"
+            android:launchMode="singleTask" />
+
+        <activity
+            android:name=".activity_service"
+            android:launchMode="singleTask"
+            android:exported="false" />
+
+        <activity
+            android:name=".activity_update"
+            android:launchMode="singleTask"
+            android:exported="false" />
+
+        <activity
+            android:name=".activity_login"
+            android:launchMode="singleTask"
+            android:exported="false" />
+
+        <activity
+            android:name=".activity_friendsetting"
+            android:launchMode="singleTask"
+            android:exported="false" />
+
+        <activity android:name=".activity_setting" />
+
+        <activity
+            android:name=".activity_password"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity android:name=".activity_member_info" />
+
+        <activity
+            android:name=".activity_biometric"
+            android:excludeFromRecents="true" />
+
+        <activity
+            android:name=".activity_daochu"
+            android:excludeFromRecents="true" />
+
+        <activity android:name=".activity_service_input" />
+
+        <activity android:name=".activity_editgroup" />
+
+        <activity android:name=".activity_group_profile" />
+
+        <activity android:name=".activity_search_network" />
+
+        <activity
+            android:name=".activity_user_profile"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity_group_join"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".activity_invite_member" />
+
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/UCropCustomTheme"/>
+
+        <activity-alias
+            android:name=".Activity_Rili"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/app_rili"
+            android:label="喵喵日历"
+            android:targetActivity=".activity_main">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".Activity_FlappyBird"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/flappybird"
+            android:label="Flappy Bird"
+            android:targetActivity=".activity_main">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".Activity_Xigua"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/app_xigua"
+            android:label="@string/app_name_xigua"
+            android:targetActivity=".activity_main">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".Activity_Douyin"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/app_douyin"
+            android:label="@string/app_name_douyin"
+            android:targetActivity=".activity_main">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".Activity_Taobao"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/app_taobao"
+            android:label="@string/app_name_douyin"
+            android:targetActivity=".activity_main">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".Activity_WPS"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/app_wps"
+            android:label="WPS"
+            android:targetActivity=".activity_main">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <service
+            android:name="service.foreground"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="specialUse" />
+
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="c44518a3ab36f41133d9d1e6feb90d54" />
+
+        <service android:name="com.amap.api.location.APSService" />
+
+        <!-- ✅ 核心修改点：将写死的 authorities 改为使用 ${applicationId} 动态占位符 -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:enabled="true"
+            android:grantUriPermissions="true"
+            tools:ignore="MissingClass">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+    </application>
+</manifest>

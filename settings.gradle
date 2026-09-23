@@ -1,0 +1,29 @@
+pluginManagement {
+    repositories {
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
+        mavenCentral()
+        gradlePluginPortal()
+        maven { url 'https://jitpack.io' }
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        // ✨ 精简合并后的 JitPack 仓库，去掉多余且冲突的重复声明
+        maven {
+            url 'https://jitpack.io'
+        }
+    }
+}
+
+rootProject.name = "Midian"
+include ':app'
+include ':miaomiao_auth'

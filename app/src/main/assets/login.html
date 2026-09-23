@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>欢迎回来 - 喵喵蜜电</title>
+    <style>
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(180deg, #f3ede2 0%, #fdfbf7 40%, #ffffff 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* 纯网页内容容器 */
+        .page-container {
+            width: 100%;
+            max-width: 400px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 40px 24px 24px 24px;
+            box-sizing: border-box;
+        }
+
+        /* App 图标区域 */
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .app-logo {
+            width: 80px;
+            height: 80px;
+            background-color: #358873;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 欢迎文本 */
+        .welcome-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+            color: #111111;
+            margin-top: 32px;
+            margin-bottom: 12px;
+        }
+
+        .welcome-subtitle {
+            text-align: center;
+            font-size: 14px;
+            color: #8c867a;
+            line-height: 1.6;
+            padding: 0 20px;
+            margin-bottom: 48px;
+        }
+
+        /* 表单输入框 */
+        .input-group {
+            position: relative;
+            margin-bottom: 18px;
+        }
+
+        .input-field {
+            width: 100%;
+            height: 54px;
+            background-color: #ffffff;
+            border: 1px solid #eadecc;
+            border-radius: 16px;
+            padding: 0 44px;
+            font-size: 15px;
+            color: #333333;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-field:focus {
+            border-color: #358873;
+        }
+
+        .input-icon-left {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            color: #666666;
+        }
+
+        .input-icon-right {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            color: #666666;
+            cursor: pointer;
+        }
+
+        /* 记住我 & 忘记密码 */
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 4px;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            color: #222222;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .remember-me input,
+        .agreement-checkbox input {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 1.5px solid #358873;
+            border-radius: 4px;
+            margin-right: 8px;
+            outline: none;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .remember-me input:checked,
+        .agreement-checkbox input:checked {
+            background-color: #358873;
+        }
+
+        .remember-me input:checked::after,
+        .agreement-checkbox input:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 12px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .forgot-pass {
+            color: #358873;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* 隐私协议样式 */
+        .agreement-checkbox {
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            color: #666666;
+            margin-bottom: 24px;
+            cursor: pointer;
+            line-height: 1.4;
+        }
+
+        .agreement-checkbox a {
+            color: #358873;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* 登录主按钮 */
+        .btn-login {
+            width: 100%;
+            height: 54px;
+            background-color: #358873;
+            color: #ffffff;
+            border: none;
+            border-radius: 27px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(53, 136, 115, 0.2);
+        }
+
+        .btn-login:active {
+            opacity: 0.9;
+        }
+
+        /* 按钮禁用状态（未勾选协议或正在加载） */
+        .btn-login:disabled {
+            background-color: #cccccc;
+            color: #ffffff;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* 网页内嵌提示信息样式 */
+        .page-toast {
+            margin-top: 20px;
+            padding: 14px 16px;
+            border-radius: 14px;
+            font-size: 14px;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+            transition: all 0.3s ease;
+        }
+
+        .toast-success {
+            background-color: #e6f4ea;
+            color: #137333;
+            border: 1px solid #c2e7cb;
+        }
+
+        .toast-error {
+            background-color: #fce8e6;
+            color: #c5221f;
+            border: 1px solid #fad2cf;
+        }
+
+        .toast-info {
+            background-color: #fef7e0;
+            color: #b06000;
+            border: 1px solid #fbe096;
+        }
+
+        /* 底部注册文本 */
+        .signup-prompt {
+            text-align: center;
+            font-size: 14px;
+            color: #666666;
+            margin-top: auto;
+            padding-top: 24px;
+            margin-bottom: 24px;
+        }
+
+        .signup-prompt a {
+            color: #358873;
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page-container">
+    <div class="logo-container">
+        <div class="app-logo">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                        d="M12 2C6.48 2 2 6.48 2 12C2 14.52 2.93 16.82 4.46 18.6L4.5 18.63C5.58 19.58 7.37 20 9.5 20C15.5 20 20 15.5 20 9.5C20 6.5 18.5 4 16 3C16.5 4.5 16.5 6.5 15 8C13.5 9.5 11 9.5 9.5 8C8.8 7.3 8.5 6.4 8.5 5.5C5.8 6.7 4 9.6 4 13C4 17.42 7.58 21 12 21C16.42 21 20 17.42 20 13C20 11.57 19.62 10.23 18.96 9.07"
+                        stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" />
+                <circle cx="11.5" cy="12.5" r="2" fill="#ffffff" />
+                <circle cx="9" cy="9.5" r="1.2" fill="#ffffff" />
+                <circle cx="11.5" cy="8" r="1.2" fill="#ffffff" />
+                <circle cx="14.5" cy="9.5" r="1.2" fill="#ffffff" />
+            </svg>
+        </div>
+    </div>
+
+    <div class="welcome-title">喵喵社交</div>
+    <div class="welcome-subtitle">安全加密的即时通讯，让每一句交流都享有绝对的安全隐私。</div>
+
+    <div class="input-group">
+            <span class="input-icon-left">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8c867a" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </span>
+        <input type="text" id="mobileInput" class="input-field" placeholder="请输入您的用户名" value="9000">
+    </div>
+
+    <div class="input-group">
+            <span class="input-icon-left">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8c867a" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+            </span>
+        <input type="password" id="passwordInput" class="input-field" placeholder="请输入密码" value="111111">
+        <span class="input-icon-right" id="togglePassword">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8c867a" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+            </span>
+    </div>
+
+    <div class="form-options">
+        <label class="remember-me">
+            <input type="checkbox" checked>
+            记住我
+        </label>
+        <a href="#" class="forgot-pass">忘记密码</a>
+    </div>
+
+    <label class="agreement-checkbox" id="agreementLabel">
+        <input type="checkbox" id="agreementInput">
+        <span>我已认真阅读并同意相关 <a href="#">用户协议</a> 与 <a href="#">隐私声明</a></span>
+    </label>
+
+    <button id="loginBtn" class="btn-login" disabled>登录</button>
+
+    <div id="toastBox" class="page-toast"></div>
+
+    <div class="signup-prompt">
+        还没有账号？ <a href="#">立即注册</a>
+    </div>
+</div>
+
+<script>
+    // 密码可见性切换
+    const passwordInput = document.getElementById('passwordInput');
+    const togglePassword = document.getElementById('togglePassword');
+    togglePassword.addEventListener('click', () => {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+    });
+
+    // 协议勾选控制登录按钮状态
+    const agreementInput = document.getElementById('agreementInput');
+    const loginBtn = document.getElementById('loginBtn');
+
+    agreementInput.addEventListener('change', function () {
+        loginBtn.disabled = !this.checked;
+    });
+
+    // 统一页面内信息提示函数
+    function showMessage(text, type = 'info') {
+        const toastBox = document.getElementById('toastBox');
+        toastBox.className = `page-toast toast-${type}`;
+        toastBox.innerText = text;
+        toastBox.style.display = 'block';
+    }
+
+    // 登录请求逻辑
+    loginBtn.addEventListener('click', async function () {
+        // 双重保险：防未勾选绕过
+        if (!agreementInput.checked) {
+            showMessage('请先阅读并同意相关协议与隐私声明', 'info');
+            return;
+        }
+
+        const mobile = document.getElementById('mobileInput').value.trim();
+        const password = document.getElementById('passwordInput').value;
+
+        if (!mobile || !password) {
+            showMessage('请完整填写用户名和密码', 'info');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('mobile', mobile);
+        formData.append('password', password); // 明文
+        formData.append('type', 'midian');
+
+        loginBtn.disabled = true;
+        loginBtn.innerText = '正在安全登录...';
+        showMessage('正在验证登录，请稍候...', 'info');
+
+        try {
+            const response = await fetch('https://member.am930.cn/?data=miaomiao&file=member&func=login', {
+                method: 'POST',
+                body: formData
+            });
+
+            const resultJson = await response.json();
+            if (resultJson && Number(resultJson.code) === 1) {
+                showMessage('登录成功！正在进入安全系统...', 'success');
+                // 获取今日的纯日期数字（例如 20号 结果就是 "20"）
+                const todayDateOnly = new Date().getDate(); // 这是一个 int 数字
+                const intLogintime = parseInt(todayDateOnly, 10);
+                const intUid = parseInt(resultJson.uid || 0, 10);
+                // 调用已有的 AndroidBridge 本地函数 setBurnStatus 连续保存 SP
+                if (window.AndroidBridge && typeof window.AndroidBridge.setBurnStatus === 'function') {
+                    window.AndroidBridge.setBurnStatus("uid", intUid);
+                    window.AndroidBridge.setBurnStatus("nickname", String(resultJson.nickname || ""));
+                    window.AndroidBridge.setBurnStatus("sign", String(resultJson.sign || ""));
+                    window.AndroidBridge.setBurnStatus("image", String(resultJson.image || ""));
+                    window.AndroidBridge.setBurnStatus("userid", String(resultJson.userid || ""));
+                    window.AndroidBridge.setBurnStatus("logintime", intLogintime);
+                    window.AndroidBridge.startSocket();
+                    window.AndroidBridge.toAppPage();
+                }
+            } else {
+                showMessage('登录失败，用户名或密码错误', 'error');
+                loginBtn.disabled = false;
+            }
+
+        } catch (error) {
+            showMessage('网络请求或解密数据失败，请检查网络后再试', 'error');
+            console.error(error);
+            loginBtn.disabled = false;
+        } finally {
+            loginBtn.innerText = '登录';
+        }
+    });
+</script>
+</body>
+
+</html>
