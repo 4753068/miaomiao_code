@@ -14,3 +14,6 @@
 .cxx
 local.properties
 miaomiao_auth
+*.jks
+*.keystore
+*.p12
