@@ -1,5 +1,6 @@
 package com.qapp.midian;
 
+import static android.view.View.VISIBLE;
 import static com.blankj.utilcode.util.ViewUtils.runOnUiThread;
 import static Data.MemberUtils.ShowVipDialog;
 import static Dialog.SettingDialog.showChatLockDialog;
@@ -23,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -33,6 +35,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.blankj.utilcode.util.FileUtils;
 import com.bumptech.glide.Glide;
@@ -95,6 +98,8 @@ public class activity_setting extends AppCompatActivity implements View.OnClickL
     private SeekBar sbAlphaProgress;
     private TextView tvAlphaValue;
 
+    private LinearLayout gexingbox;
+    private ConstraintLayout item_lock_action,item_strategy,item_burn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -156,6 +161,19 @@ public class activity_setting extends AppCompatActivity implements View.OnClickL
         PointProgressBar = findViewById(R.id.PointProgressBar);
         strpoint = findViewById(R.id.strpoint);
 
+        item_lock_action=findViewById(R.id.item_lock_action);
+        item_strategy=findViewById(R.id.item_strategy);
+        item_burn=findViewById(R.id.item_burn);
+        gexingbox=findViewById(R.id.gexingbox);
+
+        if (SPUtils.getInstance().contains("Pro"))
+        {
+            item_lock_action.setVisibility(VISIBLE);
+            item_strategy.setVisibility(VISIBLE);
+            item_burn.setVisibility(VISIBLE);
+            gexingbox.setVisibility(VISIBLE);
+        }
+
         // 批量注册标准点击反射监听器
         findViewById(R.id.item_profile).setOnClickListener(this);
         findViewById(R.id.item_bind).setOnClickListener(this);
@@ -182,7 +200,7 @@ public class activity_setting extends AppCompatActivity implements View.OnClickL
         long _viptiime = SPUtils.getInstance().get("vip", 0L);
         if (_viptiime > System.currentTimeMillis() / 1000) {
             if (tvProfileVipBadge != null) {
-                tvProfileVipBadge.setVisibility(View.VISIBLE);
+                tvProfileVipBadge.setVisibility(VISIBLE);
             }
             tvVip.setText("生效中:" + DateTimeUtils.stampToDate(_viptiime));
         } else {
@@ -331,7 +349,7 @@ public class activity_setting extends AppCompatActivity implements View.OnClickL
             if (config.has("vip")) {
                 vipTimestamp = config.optLong("vip", 0);
                 if (vipTimestamp > System.currentTimeMillis() / 1000) {
-                    if (tvProfileVipBadge != null) tvProfileVipBadge.setVisibility(View.VISIBLE);
+                    if (tvProfileVipBadge != null) tvProfileVipBadge.setVisibility(VISIBLE);
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
                     String timeStr = sdf.format(new Date(vipTimestamp * 1000));
                     tvUserid.setText("账号 ID: " + config.optString("userid") + " (至 " + timeStr + ")");
@@ -462,7 +480,7 @@ public class activity_setting extends AppCompatActivity implements View.OnClickL
                         .centerCrop()
                         .transform(new RoundedCorners(dp2px(8)))
                         .into(ivImgBox);
-                badgeCheck.setVisibility(View.VISIBLE);
+                badgeCheck.setVisibility(VISIBLE);
             } else {
                 cardView.setBackgroundResource(R.drawable.bg_app_card_normal);
                 Glide.with(this)

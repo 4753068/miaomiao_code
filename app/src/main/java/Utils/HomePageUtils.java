@@ -13,8 +13,8 @@ public class HomePageUtils {
     // 规范化双引号标准 JSON 字符串
     public static final String Site = "[" +
             "{\"name\":\"喵喵\",\"url\":\"https://member.am930.cn/app/home/view/app_home.php\",\"pkg\":\"com.qapp.midian.MainActivity\"}," +
-            "{\"name\":\"喵喵日历\",\"url\":\"https://member.am930.cn/app/monipage/rili.html\",\"pkg\":\"com.qapp.midian.Activity_Rili\"}," +
-            "{\"name\":\"Flappy Bird\",\"url\":\"https://member.am930.cn/app/monipage/flappybird.html\",\"pkg\":\"com.qapp.midian.Activity_FlappyBird\"}," +
+            "{\"name\":\"喵喵日历\",\"url\":\"https://member.am930.cn/app/monipage/rili/index.html\",\"pkg\":\"com.qapp.midian.Activity_Rili\"}," +
+            "{\"name\":\"Flappy Bird\",\"url\":\"https://member.am930.cn/app/monipage/flappybird/index.html\",\"pkg\":\"com.qapp.midian.Activity_FlappyBird\"}," +
             "{\"name\":\"西瓜视频\",\"url\":\"https://member.am930.cn/app/monipage/xigua.html\",\"pkg\":\"com.qapp.midian.Activity_Xigua\"}," +
             "{\"name\":\"抖音\",\"url\":\"https://member.am930.cn/app/monipage/douyin.html\",\"pkg\":\"com.qapp.midian.Activity_Douyin\"}," +
             "{\"name\":\"淘宝\",\"url\":\"https://member.am930.cn/app/monipage/taobao.html\",\"pkg\":\"com.qapp.midian.Activity_Taobao\"}," +

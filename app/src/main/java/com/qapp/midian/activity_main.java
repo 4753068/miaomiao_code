@@ -23,6 +23,7 @@ import android.widget.ProgressBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.amap.api.location.AMapLocation;
 
@@ -56,7 +57,10 @@ public class activity_main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
         that = this;
-        StatusBarUtil.setStatusBarMode(this, false, R.color.black);
+        // 在 onCreate 的 setContentView 之后调用：
+        WindowInsetsControllerCompat controller = new WindowInsetsControllerCompat(getWindow(), getWindow().getDecorView());
+// 设置为 false 即表示：状态栏文字/图标使用浅色（白色），适用于深色/黑色背景
+        controller.setAppearanceLightStatusBars(false);
 
         CheckUserUtil.Biombet();//检查指纹模块
 
@@ -96,6 +100,55 @@ public class activity_main extends AppCompatActivity {
 
         // 2. 注入桥接对象，命名为 "AndroidBridge" (这个名字在前端 HTML 中会用到)
         webView.addJavascriptInterface(new WebBridge(), "AndroidBridge");
+
+        webView.setWebViewClient(new android.webkit.WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(android.webkit.WebView view, android.webkit.WebResourceRequest request) {
+                String url = request.getUrl().toString();
+                boolean hasGesture = request.hasGesture(); // 关键：判断是否是用户真实手动点击
+
+                return handleUrlNavigation(view, url, hasGesture);
+            }
+
+            // 兼容低版本 Android
+            @Override
+            public boolean shouldOverrideUrlLoading(android.webkit.WebView view, String url) {
+                // 低版本无法获取 hasGesture，走 URL 规则兜底
+                return handleUrlNavigation(view, url, true);
+            }
+
+            private boolean handleUrlNavigation(android.webkit.WebView view, String url, boolean hasGesture) {
+                if (url == null || url.isEmpty()) return false;
+
+                // 1. 如果是非用户点击的自动重定向（比如 JS 定时器跳转、location.replace 等），绝不弹新页面，直接在当前 WebView 加载
+                if (!hasGesture) {
+                    return false; // 返回 false 表示由当前 WebView 内部直接加载
+                }
+
+                // 2. 主站核心域名或 App 内部功能页面，即使点击也保持在当前 WebView（根据你的业务按需保留或放行）
+                // 比如重定向的目标 "https://member.am930.cn/?app=midian&func=app"
+                if (url.contains("func=app") || url.contains("app_home.php")) {
+                    return false; // 留在当前 WebView，不跳新窗口
+                }
+
+                // 3. 用户真实点击的外部链接、文章详情等，才拦截并打开新的 Activity 页面
+                if (url.startsWith("http://") || url.startsWith("https://")) {
+                    Intent intent = new Intent(activity_main.this, activity_web.class);
+                    intent.putExtra("url", url);
+                    startActivity(intent);
+                    return true; // 已拦截并用新页面打开
+                }
+
+                // 4. 其他协议（如 weixin://, alipays:// 等）
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    startActivity(intent);
+                    return true;
+                } catch (Exception e) {
+                    return false;
+                }
+            }
+        });
 
         Intent intent = new Intent(this, service.foreground.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -180,6 +233,11 @@ public class activity_main extends AppCompatActivity {
             it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             App.AppContext.startActivity(it);
             that.finish();
+        }
+
+        // ✨【新增】检测距离上次清理是否已超过 6 小时，超过则立即清理
+        if (webView != null) {
+            Utils.WebViewCacheManager.checkAndCleanIfExpired(this, webView);
         }
 
         checkAndShowPermissionDialog();

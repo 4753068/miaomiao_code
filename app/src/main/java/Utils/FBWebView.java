@@ -78,8 +78,9 @@ public class FBWebView extends WebView {
         }
 
         setLayerType(View.LAYER_TYPE_HARDWARE, null);
-
+        addJavascriptInterface(new WebAppInterface(getContext()), "AppBridge");
         initDefaultClients();
+
     }
 
     public void attachProgressBar(ProgressBar bar) {
@@ -231,4 +232,42 @@ public class FBWebView extends WebView {
             }
         }
     }
+
+    // 在 FBWebView 类中添加这个内部类
+    public class WebAppInterface {
+        private Context mContext;
+
+        public WebAppInterface(Context context) {
+            this.mContext = context;
+        }
+
+        // 暴露给 JS 调用的获取 uid 方法
+        @android.webkit.JavascriptInterface
+        public String getUid() {
+            android.content.SharedPreferences sp = mContext.getSharedPreferences("app_config", Context.MODE_PRIVATE);
+            try {
+                // 先尝试作为 String 读取
+                return sp.getString("uid", "");
+            } catch (ClassCastException e) {
+                // 如果捕获到类型转换异常，说明原生代码是用 putInt 保存的，则改为 getInt 并转为 String 返回
+                int uidInt = sp.getInt("uid", 0);
+                return uidInt == 0 ? "" : String.valueOf(uidInt);
+            }
+        }
+
+        // 暴露给 JS 调用的获取 sign 方法
+        @android.webkit.JavascriptInterface
+        public String getSign() {
+            return mContext.getSharedPreferences("app_config", Context.MODE_PRIVATE)
+                    .getString("sign", "");
+        }
+
+        // 暴露给 JS 调用的获取 nickname 方法
+        @android.webkit.JavascriptInterface
+        public String getNickname() {
+            return mContext.getSharedPreferences("app_config", Context.MODE_PRIVATE)
+                    .getString("nickname", "");
+        }
+    }
+
 }
