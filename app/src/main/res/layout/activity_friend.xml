@@ -90,16 +90,7 @@
                             android:layout_marginBottom="10dp"
                             android:background="@drawable/bg_input_box">
 
-                            <TextView
-                                android:id="@+id/tips"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_gravity="center"
-                                android:layout_margin="30dp"
-                                android:gravity="center"
-                                android:text="暂时没有好友"
-                                android:textColor="#999999"
-                                android:visibility="gone"></TextView>
+
 
                             <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/recycler_friend_list"
@@ -123,6 +114,17 @@
             android:layout_margin="10dp"
             android:background="@drawable/bg_capsule_button_black"
             android:visibility="gone"></TextView>
+
+        <TextView
+            android:id="@+id/tips"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin="30dp"
+            android:gravity="center"
+            android:text="目前没有好友，点击右下角+添加好友"
+            android:textColor="#999999"></TextView>
+
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btnAddFriend"

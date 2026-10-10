@@ -249,7 +249,7 @@ public class CheckUserUtil {
                 App.FriendPass = true;
                 if (activity_friend.biobackground != null) activity_friend.biobackground.setVisibility(View.GONE);
                 if (activity_friend.RecyclerView != null) activity_friend.RecyclerView.setVisibility(View.VISIBLE);
-                if (activity_friend.tips != null) activity_friend.tips.setVisibility(View.GONE);
+                //if (activity_friend.tips != null) activity_friend.tips.setVisibility(View.GONE);
                 dialog.dismiss();
 
             } else if (verifyResult == IMemberBilling.PIN_RESULT_VIRTUAL) {

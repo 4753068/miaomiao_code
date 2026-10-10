@@ -5,6 +5,7 @@ import static android.content.Context.VIBRATOR_SERVICE;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.VibrationEffect;
@@ -15,8 +16,10 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
@@ -30,13 +33,15 @@ import java.lang.ref.WeakReference;
 import Data.CheckUserUtil;
 
 public class FloatButton {
-    private static WeakReference<ImageView> floatingBtnRef = null;
-    private static WeakReference<TextView> messageNumberRef = null;
-    private static WeakReference<FrameLayout> rootContainerRef = null;
-    private static WeakReference<FrameLayout> floatContainerRef = null;
+
+    private static WeakReference floatingBtnRef = null;
+    private static WeakReference messageNumberRef = null;
+    private static WeakReference rootContainerRef = null;
+    private static WeakReference floatContainerRef = null;
 
     private static boolean isDragging = false;
     public static TextView messageNumber;
+
     @SuppressLint("ClickableViewAccessibility")
     public static void floatButton(Activity activity) {
         if (activity == null || activity.isFinishing() || activity.isDestroyed()) {
@@ -142,7 +147,7 @@ public class FloatButton {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) view.getLayoutParams();
-                FrameLayout parentView = rootContainerRef != null ? rootContainerRef.get() : null;
+                FrameLayout parentView = rootContainerRef != null ? (FrameLayout) rootContainerRef.get() : null;
 
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
@@ -203,10 +208,134 @@ public class FloatButton {
         });
 
         rootContainer.addView(floatContainer);
+
+        // ==============================================================
+        // 检查并展示首次启动的悬浮窗引导
+        // ==============================================================
+        boolean hasShownGuide = SPUtils.getInstance().get("has_shown_chat_guide", false);
+        if (!hasShownGuide) {
+            showGuideOverlay(activity, rootContainer, floatContainer, size);
+        }
+    }
+
+    /**
+     * 动态生成引导遮罩层
+     */
+    private static void showGuideOverlay(Activity activity, FrameLayout rootContainer, FrameLayout floatContainer, int fbSize) {
+        // 1. 创建全屏遮罩层
+        FrameLayout guideOverlay = new FrameLayout(activity);
+        guideOverlay.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        guideOverlay.setBackgroundColor(Color.parseColor("#B3000000"));
+        guideOverlay.setClickable(true);
+
+        // 2. 创建包裹内容的垂直线性布局
+        LinearLayout guideContent = new LinearLayout(activity);
+        guideContent.setOrientation(LinearLayout.VERTICAL);
+        guideContent.setGravity(Gravity.CENTER_HORIZONTAL);
+
+        // 3. 【X 关闭图标按钮】替换掉原来的文字胶囊按钮
+        ImageView btnClose = new ImageView(activity);
+        btnClose.setImageResource(R.drawable.btn_closed);
+        btnClose.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+        // 设定可点击区域大小为 36dp，内部留有 6dp 内边距方便手指轻触
+        int closeBtnSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 36, activity.getResources().getDisplayMetrics());
+        int closeBtnPadding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, activity.getResources().getDisplayMetrics());
+        btnClose.setPadding(closeBtnPadding, closeBtnPadding, closeBtnPadding, closeBtnPadding);
+
+        LinearLayout.LayoutParams closeParams = new LinearLayout.LayoutParams(closeBtnSize, closeBtnSize);
+        closeParams.gravity = Gravity.CENTER_HORIZONTAL;
+        closeParams.bottomMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, activity.getResources().getDisplayMetrics());
+        btnClose.setLayoutParams(closeParams);
+
+        // 点击 X 按钮：记录状态为 true 并销毁当前遮罩
+        btnClose.setOnClickListener(v -> {
+            SPUtils.getInstance().put("has_shown_chat_guide", true);
+            rootContainer.removeView(guideOverlay);
+        });
+
+        // 4. "点击这里开始聊天" 提示文本
+        TextView tvHint = new TextView(activity);
+        tvHint.setText("点击这里开始聊天");
+        tvHint.setTextColor(Color.WHITE);
+        tvHint.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+        tvHint.setTypeface(null, Typeface.BOLD);
+        tvHint.setPadding(0, 0, 0, 10);
+
+        int hintWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, activity.getResources().getDisplayMetrics());
+        LinearLayout.LayoutParams hintParams = new LinearLayout.LayoutParams(hintWidth, LinearLayout.LayoutParams.WRAP_CONTENT);
+        hintParams.gravity = Gravity.CENTER_HORIZONTAL;
+        tvHint.setLayoutParams(hintParams);
+        tvHint.setGravity(Gravity.CENTER);
+
+        // 5. 虚线箭头图片
+        ImageView ivArrow = new ImageView(activity);
+        ivArrow.setImageResource(R.drawable.xuxianjiantou);
+        ivArrow.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+        int arrowWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, activity.getResources().getDisplayMetrics());
+        int arrowHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, activity.getResources().getDisplayMetrics());
+        LinearLayout.LayoutParams arrowParams = new LinearLayout.LayoutParams(arrowWidth, arrowHeight);
+        ivArrow.setLayoutParams(arrowParams);
+
+        // 组装内容：X 关闭图标 -> 提示文字 -> 箭头
+        guideContent.addView(btnClose);
+        guideContent.addView(tvHint);
+        guideContent.addView(ivArrow);
+
+        FrameLayout.LayoutParams contentParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        guideOverlay.addView(guideContent, contentParams);
+
+        int floatIndex = rootContainer.indexOfChild(floatContainer);
+        if (floatIndex >= 0) {
+            rootContainer.addView(guideOverlay, floatIndex);
+        } else {
+            rootContainer.addView(guideOverlay);
+        }
+
+        // 6. 动态计算尺寸并将其悬浮对齐到 FloatButton 正上方
+        guideContent.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                guideContent.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                FrameLayout.LayoutParams fbParams = (FrameLayout.LayoutParams) floatContainer.getLayoutParams();
+                int fbX = fbParams.leftMargin;
+                int fbY = fbParams.topMargin;
+
+                int contentWidth = guideContent.getWidth();
+                int contentHeight = guideContent.getHeight();
+
+                int screenWidth = rootContainer.getWidth();
+                if (screenWidth == 0) {
+                    screenWidth = activity.getResources().getDisplayMetrics().widthPixels;
+                }
+
+                int targetX = fbX + (fbSize / 2) - (contentWidth / 2);
+
+                if (targetX < 20) {
+                    targetX = 20;
+                } else if (targetX + contentWidth > screenWidth - 20) {
+                    targetX = screenWidth - contentWidth - 20;
+                }
+
+                // 偏移计算
+                int top60dp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, activity.getResources().getDisplayMetrics());
+                int targetY = fbY - contentHeight - 10 + top60dp;
+
+                if (targetY < 20) {
+                    targetY = fbY + fbSize + 10;
+                    ivArrow.setRotation(180f);
+                }
+
+                guideContent.setTranslationX(targetX);
+                guideContent.setTranslationY(targetY);
+            }
+        });
     }
 
     public static void updateAlpha() {
-        ImageView btn = floatingBtnRef != null ? floatingBtnRef.get() : null;
+        ImageView btn = floatingBtnRef != null ? (ImageView) floatingBtnRef.get() : null;
         if (btn != null) {
             int savedAlpha = SPUtils.getInstance().get("Floatalpha", 5);
             btn.setAlpha(savedAlpha / 10f);
@@ -214,7 +343,7 @@ public class FloatButton {
     }
 
     public static void updateMessageCount(int count) {
-        TextView tv = messageNumberRef != null ? messageNumberRef.get() : null;
+        TextView tv = messageNumberRef != null ? (TextView) messageNumberRef.get() : null;
         if (tv == null) return;
 
         if (count > 0) {
@@ -226,8 +355,8 @@ public class FloatButton {
     }
 
     public static void Remove() {
-        FrameLayout root = rootContainerRef != null ? rootContainerRef.get() : null;
-        FrameLayout floatView = floatContainerRef != null ? floatContainerRef.get() : null;
+        FrameLayout root = rootContainerRef != null ? (FrameLayout) rootContainerRef.get() : null;
+        FrameLayout floatView = floatContainerRef != null ? (FrameLayout) floatContainerRef.get() : null;
 
         if (root != null && floatView != null) {
             root.removeView(floatView);

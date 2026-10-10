@@ -299,6 +299,7 @@
         <!-- 2. 聊天记录自动焚毁 -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/item_burn"
+            android:visibility="gone"
             style="@style/SettingsItemRow">
 
             <View
@@ -358,6 +359,7 @@
         <!-- 3. 即时焚毁策略 -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/item_strategy"
+            android:visibility="gone"
             style="@style/SettingsItemRow">
 
             <View
@@ -707,6 +709,7 @@
         <!-- 5. 锁屏后操作 -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/item_lock_action"
+            android:visibility="gone"
             style="@style/SettingsItemRow">
 
             <View
@@ -763,6 +766,12 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <LinearLayout
+        android:id="@+id/gexingbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="vertical">
         <TextView
             style="@style/SettingsGroupTitle"
             android:text="个性化" />
@@ -870,7 +879,7 @@
             </LinearLayout>
 
         </LinearLayout>
-
+    </LinearLayout>
         <TextView
             style="@style/SettingsGroupTitle"
             android:text="其他" />

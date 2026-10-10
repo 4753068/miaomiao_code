@@ -1,10 +1,13 @@
 package Data;
 
+import static com.qapp.midian.activity_friend.tips;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 
 import com.qapp.midian.App;
 
@@ -120,6 +123,7 @@ public class FriendUtils {
                         if (activity_friend.that != null && activity_friend.that.originalDatas != null) {
                             activity_friend.that.originalDatas.clear();
                             activity_friend.that.applySearchFilter();
+                            tips.setVisibility(View.VISIBLE);
                         }
                     }
                 });
@@ -203,6 +207,13 @@ public class FriendUtils {
     // 新增/确认包含可传回调的重载
     public static void GET_FRIEND(Runnable onFinish) {
         if (App.UID == 0) return;
+        if(tips!=null)
+        {
+            tips.setVisibility(View.VISIBLE);
+            tips.setText("目前没有好友，点击右下角+添加好友"); // 修复：进入界面查询无好友时强制设置提示语
+        }
+
+
         if (MemberBillingBridge.get() != null) {
             MemberBillingBridge.get().syncFriends(activity_main.that, App.UID, App.db, App.Folder, () -> {
                 // AAR 将网络好友和群落盘完成后，先执行默认的本地列表刷新

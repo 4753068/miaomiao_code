@@ -17,6 +17,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import Utils.SPUtils;
 import Utils.WebBridge;
@@ -34,7 +35,10 @@ public class activity_web extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        setupTransparentStatusBarWithBlackText(this); // 状态栏透明
+        // 在 onCreate 的 setContentView 之后调用：
+        WindowInsetsControllerCompat controller = new WindowInsetsControllerCompat(getWindow(), getWindow().getDecorView());
+// 设置为 false 即表示：状态栏文字/图标使用浅色（白色），适用于深色/黑色背景
+        controller.setAppearanceLightStatusBars(false);
 
         webView = findViewById(R.id.myWebView);
         ProgressBar progressBar = findViewById(R.id.webViewProgressBar);
